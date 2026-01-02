@@ -34,6 +34,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Configured environment variables (.env file)
   - Created Supabase client utilities (supabase.ts and supabaseServer.ts)
   - Researched new Supabase API key system (legacy JWT keys still supported until late 2026)
+- Implemented Google OAuth authentication:
+  - Created Astro middleware for session management and route protection
+  - Built login page with Google OAuth button and beautiful gradient UI
+  - Created OAuth callback handler with support for both PKCE and implicit OAuth flows
+  - Built protected dashboard page with user avatar, name, and logout button
+  - Configured Google OAuth in Supabase dashboard with proper client ID and secret
+  - Set up redirect URIs for local development and production
+  - Created logout page (`/logout`) with proper server-side session cleanup
+  - Added manual cookie deletion to ensure complete logout
 
 ### Changed
 
@@ -42,6 +51,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 ### Fixed
+
+- Fixed OAuth callback handler to support Supabase's implicit flow (tokens in URL hash fragment)
+  - Updated callback to detect tokens in hash fragment on client side
+  - Implemented POST endpoint to send tokens to server for proper session creation
+  - Added comprehensive error handling and debug information display
+  - Fixed issue where session wasn't being set on server side, causing middleware to reject authentication
+- Fixed logout functionality
+  - Changed from client-side only logout to server-side logout with cookie cleanup
+  - Added manual deletion of all Supabase cookies to ensure complete session termination
+  - Resolved "Auth session missing" error by gracefully handling logout errors
 
 ### Security
 

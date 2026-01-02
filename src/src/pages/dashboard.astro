@@ -1,0 +1,195 @@
+---
+// This page is protected by middleware
+const session = Astro.locals.session;
+const user = session?.user;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Dashboard - Bingoal</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        background: #f5f7fa;
+        min-height: 100vh;
+      }
+
+      .header {
+        background: white;
+        border-bottom: 1px solid #e1e8ed;
+        padding: 16px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 24px;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .user-name {
+        font-weight: 500;
+        color: #333;
+      }
+
+      .logout-btn {
+        padding: 8px 16px;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .logout-btn:hover {
+        background: #5568d3;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 24px;
+      }
+
+      .welcome {
+        background: white;
+        border-radius: 12px;
+        padding: 32px;
+        margin-bottom: 32px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .welcome h1 {
+        color: #333;
+        margin-bottom: 8px;
+        font-size: 32px;
+      }
+
+      .welcome p {
+        color: #666;
+        font-size: 16px;
+      }
+
+      .boards-section {
+        background: white;
+        border-radius: 12px;
+        padding: 32px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .boards-section h2 {
+        color: #333;
+        margin-bottom: 24px;
+        font-size: 24px;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #666;
+      }
+
+      .empty-state-icon {
+        font-size: 64px;
+        margin-bottom: 16px;
+      }
+
+      .create-board-btn {
+        margin-top: 24px;
+        padding: 12px 24px;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .create-board-btn:hover {
+        background: #5568d3;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="logo">
+        <span>🎯</span>
+        <span>Bingoal</span>
+      </div>
+      <div class="user-info">
+        {user?.user_metadata?.avatar_url && (
+          <img 
+            src={user.user_metadata.avatar_url} 
+            alt={user.user_metadata.full_name || user.email}
+            class="user-avatar"
+          />
+        )}
+        <span class="user-name">
+          {user?.user_metadata?.full_name || user?.email}
+        </span>
+        <button id="logout-btn" class="logout-btn">Logout</button>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="welcome">
+        <h1>Welcome back! 👋</h1>
+        <p>Ready to track your goals for {new Date().getFullYear()}?</p>
+      </div>
+
+      <div class="boards-section">
+        <h2>Your Bingo Boards</h2>
+        <div class="empty-state">
+          <div class="empty-state-icon">📋</div>
+          <p>You don't have any bingo boards yet.</p>
+          <p>Create your first board to start tracking your goals!</p>
+          <button class="create-board-btn">Create Your First Board</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const logoutBtn = document.getElementById('logout-btn');
+
+      logoutBtn?.addEventListener('click', () => {
+        // Simply navigate to the logout page which handles server-side logout
+        window.location.href = '/logout';
+      });
+    </script>
+  </body>
+</html>
+
