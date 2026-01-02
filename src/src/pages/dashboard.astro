@@ -562,14 +562,12 @@ const userBoards: Board[] = boards || [];
         }
       }
 
-      // Handle board card clicks (navigate to board detail page - to be implemented)
+      // Handle board card clicks (navigate to board detail page)
       document.querySelectorAll('.board-card').forEach((card) => {
         card.addEventListener('click', () => {
           const boardId = card.getAttribute('data-board-id');
           if (boardId) {
-            // TODO: Navigate to board detail page
-            console.log('Navigate to board:', boardId);
-            alert('Board detail page coming soon!');
+            window.location.href = `/board/${boardId}`;
           }
         });
       });

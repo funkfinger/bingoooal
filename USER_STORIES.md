@@ -57,8 +57,8 @@
 ### Story: Create Bingo Board
 
 - [ ] **As a** user  
-      **I want to** create a new bingo board for the year  
-      **So that** I can organize my yearly goals
+       **I want to** create a new bingo board for the year  
+       **So that** I can organize my yearly goals
 
 **Acceptance Criteria:**
 
@@ -70,8 +70,8 @@
 ### Story: View Bingo Boards
 
 - [ ] **As a** user  
-      **I want to** view all my bingo boards  
-      **So that** I can see my different goal collections
+       **I want to** view all my bingo boards  
+       **So that** I can see my different goal collections
 
 **Acceptance Criteria:**
 
@@ -82,8 +82,8 @@
 ### Story: Edit Bingo Board
 
 - [ ] **As a** user  
-      **I want to** edit my bingo board details  
-      **So that** I can update the title or year if needed
+       **I want to** edit my bingo board details  
+       **So that** I can update the title or year if needed
 
 **Acceptance Criteria:**
 
@@ -94,8 +94,8 @@
 ### Story: Delete Bingo Board
 
 - [ ] **As a** user  
-      **I want to** delete a bingo board  
-      **So that** I can remove boards I no longer need
+       **I want to** delete a bingo board  
+       **So that** I can remove boards I no longer need
 
 **Acceptance Criteria:**
 
@@ -111,15 +111,15 @@
 
 ### Story: User Can Create Group
 
-**As a** logged-in user  
-**I want to** create a group that other users can join
-**So that** I can share or collaborate on goals with others
+- [ ] **As a** logged-in user  
+      **I want to** create a group that other users can join
+      **So that** I can share or collaborate on goals with others
 
 **Acceptance Criteria:**
 
-- User can create a group
-- User can invite other users to join the group
-- User can add goal boards to the group
+- [ ] User can create a group
+- [ ] User can invite other users to join the group
+- [ ] User can add goal boards to the group
 
 ---
 
@@ -129,17 +129,17 @@
 
 ## User Management
 
-### US-003: User Logout
+### Story: User Logout
 
-**As a** logged-in user  
-**I want to** log out of my account  
-**So that** I can keep my goals private on shared devices
+- [ ] **As a** logged-in user  
+      **I want to** log out of my account  
+      **So that** I can keep my goals private on shared devices
 
 **Acceptance Criteria:**
 
-- User can log out from any page
-- Session is cleared upon logout
-- User is redirected to login page
+- [ ] User can log out from any page
+- [ ] Session is cleared upon logout
+- [ ] User is redirected to login page
 
 ## Bingo Board Management
 

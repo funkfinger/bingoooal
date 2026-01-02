@@ -1,0 +1,369 @@
+---
+import { createSupabaseServerClient } from '../../lib/supabaseServer';
+import type { Board, Goal } from '../../lib/types';
+
+// This page is protected by middleware
+const session = Astro.locals.session;
+const user = session?.user;
+
+if (!user) {
+  return Astro.redirect('/login');
+}
+
+// Get board ID from URL
+const { id } = Astro.params;
+
+if (!id) {
+  return Astro.redirect('/dashboard');
+}
+
+// Fetch the board
+const supabase = createSupabaseServerClient(Astro.cookies);
+const { data: board, error: boardError } = await supabase
+  .from('boards')
+  .select('*')
+  .eq('id', id)
+  .single();
+
+if (boardError || !board) {
+  console.error('Error fetching board:', boardError);
+  return Astro.redirect('/dashboard');
+}
+
+// Verify the board belongs to the current user
+if (board.user_id !== user.id) {
+  return Astro.redirect('/dashboard');
+}
+
+// Fetch goals for this board
+const { data: goals, error: goalsError } = await supabase
+  .from('goals')
+  .select('*')
+  .eq('board_id', id)
+  .order('position');
+
+if (goalsError) {
+  console.error('Error fetching goals:', goalsError);
+}
+
+const boardGoals: Goal[] = goals || [];
+
+// Create a map of position -> goal for easy lookup
+const goalsMap = new Map<number, Goal>();
+boardGoals.forEach(goal => {
+  goalsMap.set(goal.position, goal);
+});
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{board.title} - Bingoal</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        background: #f5f7fa;
+        min-height: 100vh;
+      }
+
+      .header {
+        background: white;
+        border-bottom: 1px solid #e1e8ed;
+        padding: 16px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .header-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .back-btn {
+        padding: 8px 16px;
+        background: #f0f0f0;
+        color: #333;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .back-btn:hover {
+        background: #e0e0e0;
+      }
+
+      .board-title {
+        font-size: 24px;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .board-year {
+        font-size: 16px;
+        color: #666;
+        margin-left: 12px;
+      }
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .user-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .logout-btn {
+        padding: 8px 16px;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .logout-btn:hover {
+        background: #5568d3;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 24px;
+      }
+
+      .bingo-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 12px;
+        background: white;
+        padding: 24px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .bingo-cell {
+        aspect-ratio: 1;
+        border: 2px solid #e1e8ed;
+        border-radius: 8px;
+        padding: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        position: relative;
+        background: white;
+        overflow: hidden;
+      }
+
+      .bingo-cell:hover {
+        border-color: #667eea;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        transform: translateY(-2px);
+      }
+
+      .bingo-cell.empty {
+        background: #f8f9ff;
+        border-style: dashed;
+      }
+
+      .bingo-cell.completed {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-color: #667eea;
+      }
+
+      .bingo-cell .goal-text {
+        font-size: 14px;
+        line-height: 1.4;
+        word-wrap: break-word;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+      }
+
+      .bingo-cell.completed .goal-text {
+        text-decoration: line-through;
+        opacity: 0.9;
+      }
+
+      .bingo-cell .empty-icon {
+        font-size: 32px;
+        opacity: 0.3;
+      }
+
+      .bingo-cell .checkmark {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        font-size: 20px;
+      }
+
+      .progress-bar {
+        background: white;
+        padding: 24px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 24px;
+      }
+
+      .progress-bar h3 {
+        font-size: 18px;
+        color: #333;
+        margin-bottom: 12px;
+      }
+
+      .progress-track {
+        height: 12px;
+        background: #e1e8ed;
+        border-radius: 6px;
+        overflow: hidden;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        border-radius: 6px;
+        transition: width 0.3s;
+      }
+
+      .progress-text {
+        margin-top: 8px;
+        font-size: 14px;
+        color: #666;
+      }
+
+      @media (max-width: 768px) {
+        .bingo-grid {
+          gap: 8px;
+          padding: 16px;
+        }
+
+        .bingo-cell {
+          padding: 8px;
+        }
+
+        .bingo-cell .goal-text {
+          font-size: 12px;
+          -webkit-line-clamp: 3;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <div class="header-left">
+        <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
+        <div>
+          <span class="board-title">{board.title}</span>
+          <span class="board-year">📅 {board.year}</span>
+        </div>
+      </div>
+      <div class="user-info">
+        {user?.user_metadata?.avatar_url && (
+          <img
+            src={user.user_metadata.avatar_url}
+            alt={user.user_metadata.full_name || user.email}
+            class="user-avatar"
+          />
+        )}
+        <button id="logout-btn" class="logout-btn">Logout</button>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="progress-bar">
+        <h3>Progress</h3>
+        <div class="progress-track">
+          <div
+            class="progress-fill"
+            style={`width: ${(boardGoals.filter(g => g.completed).length / 25) * 100}%`}
+          ></div>
+        </div>
+        <div class="progress-text">
+          {boardGoals.filter(g => g.completed).length} of 25 goals completed
+        </div>
+      </div>
+
+      <div class="bingo-grid">
+        {Array.from({ length: 25 }, (_, i) => {
+          const goal = goalsMap.get(i);
+          return (
+            <div
+              class={`bingo-cell ${goal ? (goal.completed ? 'completed' : '') : 'empty'}`}
+              data-position={i}
+              data-goal-id={goal?.id || ''}
+            >
+              {goal ? (
+                <>
+                  {goal.completed && <span class="checkmark">✓</span>}
+                  <div class="goal-text">{goal.text}</div>
+                </>
+              ) : (
+                <div class="empty-icon">+</div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+
+    <script>
+      // Logout functionality
+      const logoutBtn = document.getElementById('logout-btn');
+      logoutBtn?.addEventListener('click', () => {
+        window.location.href = '/logout';
+      });
+
+      // Handle cell clicks
+      document.querySelectorAll('.bingo-cell').forEach((cell) => {
+        cell.addEventListener('click', () => {
+          const position = cell.getAttribute('data-position');
+          const goalId = cell.getAttribute('data-goal-id');
+
+          console.log('Cell clicked:', { position, goalId });
+
+          if (goalId) {
+            // TODO: Open edit/complete goal modal
+            alert('Edit goal functionality coming soon!');
+          } else {
+            // TODO: Open add goal modal
+            alert('Add goal functionality coming soon!');
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
+
+
