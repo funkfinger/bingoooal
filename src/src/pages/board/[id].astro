@@ -1,6 +1,7 @@
 ---
 import { createSupabaseServerClient } from '../../lib/supabaseServer';
 import type { Board, Goal } from '../../lib/types';
+import exampleGoalsData from '../../data/example-goals.json';
 
 // This page is protected by middleware
 const session = Astro.locals.session;
@@ -395,6 +396,35 @@ boardGoals.forEach(goal => {
         border-color: #667eea;
       }
 
+      .textarea-with-button {
+        position: relative;
+      }
+
+      .inspire-btn {
+        position: absolute;
+        bottom: 12px;
+        right: 12px;
+        padding: 6px 12px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        box-shadow: 0 2px 4px rgba(102, 126, 234, 0.2);
+      }
+
+      .inspire-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+      }
+
+      .inspire-btn:active {
+        transform: translateY(0);
+      }
+
       .form-actions {
         display: flex;
         gap: 12px;
@@ -550,13 +580,18 @@ boardGoals.forEach(goal => {
         <form id="add-goal-form">
           <div class="form-group">
             <label for="goal-text">Goal Description</label>
-            <textarea
-              id="goal-text"
-              name="text"
-              placeholder="Enter your goal..."
-              required
-              maxlength="200"
-            ></textarea>
+            <div class="textarea-with-button">
+              <textarea
+                id="goal-text"
+                name="text"
+                placeholder="Enter your goal..."
+                required
+                maxlength="200"
+              ></textarea>
+              <button type="button" id="inspire-btn" class="inspire-btn" title="Get inspiration">
+                ✨ Inspire Me
+              </button>
+            </div>
           </div>
           <div id="add-form-error" class="error-message" style="display: none;"></div>
           <div class="form-actions">
@@ -651,7 +686,7 @@ boardGoals.forEach(goal => {
       window.celebrateBoardCompletion = celebrateBoardCompletion;
     </script>
 
-    <script define:vars={{ boardId: id }}>
+    <script define:vars={{ boardId: id, exampleGoals: exampleGoalsData.goals }}>
       let currentPosition = null;
       let currentGoalId = null;
 
@@ -675,6 +710,7 @@ boardGoals.forEach(goal => {
       const submitAddBtn = document.getElementById('submit-add-btn');
       const addFormError = document.getElementById('add-form-error');
       const goalTextInput = document.getElementById('goal-text');
+      const inspireBtn = document.getElementById('inspire-btn');
 
       // Edit modal controls
       const closeEditModalBtn = document.getElementById('close-edit-modal-btn');
@@ -767,6 +803,19 @@ boardGoals.forEach(goal => {
       cancelEditBoardBtn?.addEventListener('click', closeEditBoardModal);
       editBoardModal?.addEventListener('click', (e) => {
         if (e.target === editBoardModal) closeEditBoardModal();
+      });
+
+      // Inspire button functionality
+      inspireBtn?.addEventListener('click', () => {
+        if (exampleGoals && exampleGoals.length > 0) {
+          const randomGoal = exampleGoals[Math.floor(Math.random() * exampleGoals.length)];
+          if (goalTextInput) {
+            goalTextInput.value = randomGoal;
+            goalTextInput.focus();
+            // Move cursor to end of text
+            goalTextInput.setSelectionRange(randomGoal.length, randomGoal.length);
+          }
+        }
       });
 
       // Handle cell clicks
