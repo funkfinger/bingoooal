@@ -66,6 +66,7 @@
 - [ ] User can set a title/name for the board
 - [ ] User can specify the year for the board
 - [ ] Board is saved and associated with the user
+- [ ] Optional center square is free space and already completed
 
 ### Story: View Bingo Boards
 
@@ -107,70 +108,69 @@
 
 ### Story: Add Goal to Board
 
-**As a** user  
-**I want to** add a goal to a specific square on my bingo board  
-**So that** I can fill my board with yearly objectives
+- [ ] **As a** user  
+       **I want to** add a goal to a specific square on my bingo board  
+       **So that** I can fill my board with yearly objectives
 
 **Acceptance Criteria:**
 
-- User can click on an empty square to add a goal
-- User can enter goal text/description
-- Goal is saved to the specific square
-- Maximum character limit is enforced for readability
+- [ ] User can click on an empty square to add a goal
+- [ ] User can enter goal text/description
+- [ ] Goal is saved to the specific square
+- [ ] Maximum character limit is enforced for readability
 
-### US-009: Edit Goal
+### Story: Edit Goal
 
-**As a** user  
-**I want to** edit an existing goal  
-**So that** I can refine or update my objectives
-
-**Acceptance Criteria:**
-
-- User can click on a filled square to edit
-- User can modify the goal text
-- Changes are saved
-
-### US-010: Delete Goal
-
-**As a** user  
-**I want to** remove a goal from a square  
-**So that** I can clear unwanted goals
+- [ ] **As a** user  
+       **I want to** edit an existing goal  
+       **So that** I can refine or update my objectives
 
 **Acceptance Criteria:**
 
-- User can delete a goal from a square
-- Square becomes empty after deletion
-- User receives confirmation before deletion
+- [ ] User can click on a filled square to edit
+- [ ] User can modify the goal text
+- [ ] Changes are saved
 
-### US-011: Mark Goal as Complete
+### Story: Delete Goal
 
-**As a** user  
-**I want to** mark a goal as completed  
-**So that** I can track my progress throughout the year
-
-**Acceptance Criteria:**
-
-- User can mark/unmark a goal as complete
-- Completed goals are visually distinct (e.g., different color, checkmark)
-- Completion status is saved
-
-### US-012: View Goal Details
-
-**As a** user  
-**I want to** view full details of a goal  
-**So that** I can see the complete description if it's long
+- [ ] **As a** user  
+       **I want to** remove a goal from a square  
+       **So that** I can clear unwanted goals
 
 **Acceptance Criteria:**
 
-- User can click/hover to see full goal text
-- Modal or tooltip displays complete information
-- Easy to close and return to board view
+- [ ] User can delete a goal from a square
+- [ ] Square becomes empty after deletion
+- [ ] User receives confirmation before deletion
 
----
+### Story: Mark Goal as Complete
 
-**Note for AI Agent:** Do not work on anything below this line!
+- [ ] **As a** user  
+       **I want to** mark a goal as completed  
+       **So that** I can track my progress throughout the year
 
----
+**Acceptance Criteria:**
+
+- [ ] User can mark/unmark a goal as complete
+- [ ] Completed goals are visually distinct (e.g., different color, checkmark)
+- [ ] Completion status is saved
+- [ ] Completion triggers small confetti animation - https://github.com/catdad/canvas-confetti
+- [ ] Completion triggers medium confetti animation if it completes a row, column, or diagonal
+- [ ] Completion triggers big animation if it completes the board
+
+### Story: View Goal Details
+
+- [ ] **As a** user  
+      **I want to** view full details of a goal  
+      **So that** I can see the complete description if it's long
+
+**Acceptance Criteria:**
+
+- [ ] User can click/hover to see full goal text
+- [ ] Modal or tooltip displays complete information
+- [ ] Easy to close and return to board view
+
+## Group Management
 
 ### Story: User Can Create Group
 
@@ -183,6 +183,7 @@
 - [ ] User can create a group
 - [ ] User can invite other users to join the group
 - [ ] User can add goal boards to the group
+- [ ] All personal boards are in a "Personal" group by default
 
 ---
 
@@ -192,21 +193,11 @@
 
 ---
 
-## Goal Management
+**Note for AI Agent:** Do not work on anything below this line!
 
-## Progress Tracking
+---
 
-### US-013: View Board Progress
-
-**As a** user  
-**I want to** see my completion progress on each board  
-**So that** I can track how many goals I've achieved
-
-**Acceptance Criteria:**
-
-- Board shows percentage or count of completed goals
-- Progress indicator is visible on board list view
-- Progress updates in real-time when goals are marked complete
+---
 
 ### US-014: Check for Bingo
 

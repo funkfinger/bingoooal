@@ -568,6 +568,15 @@ boardGoals.forEach(goal => {
       </div>
     </div>
 
+    <script>
+      import { celebrateGoalCompletion, celebrateBingo, celebrateBoardCompletion } from '../../lib/confetti';
+
+      // Make confetti functions available globally
+      window.celebrateGoalCompletion = celebrateGoalCompletion;
+      window.celebrateBingo = celebrateBingo;
+      window.celebrateBoardCompletion = celebrateBoardCompletion;
+    </script>
+
     <script define:vars={{ boardId: id }}>
       let currentPosition = null;
       let currentGoalId = null;
@@ -739,7 +748,23 @@ boardGoals.forEach(goal => {
           const result = await response.json();
 
           if (result.success) {
-            window.location.reload();
+            // Trigger confetti based on what was achieved
+            if (result.boardComplete) {
+              // Big celebration for completing the entire board!
+              window.celebrateBoardCompletion();
+              setTimeout(() => window.location.reload(), 2000);
+            } else if (result.bingoType) {
+              // Medium celebration for completing a bingo
+              window.celebrateBingo();
+              setTimeout(() => window.location.reload(), 1500);
+            } else if (completed) {
+              // Small celebration for completing a goal
+              window.celebrateGoalCompletion();
+              setTimeout(() => window.location.reload(), 800);
+            } else {
+              // No celebration, just reload
+              window.location.reload();
+            }
           } else {
             showEditError(result.error || 'Failed to update goal');
             submitEditBtn.disabled = false;

@@ -12,6 +12,10 @@
     "@astrojs/node": "^9.5.1",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.89.0",
-    "astro": "^5.16.6"
+    "astro": "^5.16.6",
+    "canvas-confetti": "^1.9.4"
+  },
+  "devDependencies": {
+    "@types/canvas-confetti": "^1.9.0"
   }
 }
