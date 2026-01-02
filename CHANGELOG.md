@@ -105,6 +105,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Implemented confirmation dialog before deletion
   - Cascade delete all associated goals via database foreign key
   - Redirect to dashboard after successful deletion
+- Implemented board locking functionality:
+  - Added `locked` column to boards table via database migration
+  - Created API endpoint for toggling board lock status
+  - Added lock/unlock button to board header with visual indicators
+  - Implemented locking rules:
+    - Unlocked boards: Can add, edit, delete goals (setup phase)
+    - Locked boards: Can ONLY mark goals as complete (tracking phase)
+    - Both states: Can delete entire board and edit board details
+  - Disabled goal text editing and delete button when locked
+  - Added info message in edit modal when board is locked
+  - Styled lock button with color coding (orange=unlock, green=locked)
 
 ### Changed
 

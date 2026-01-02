@@ -106,16 +106,16 @@
 
 ### Story: Lock Board Goals
 
-- [ ] **As a** user  
-       **I want to** lock a bingo board's goals  
-       **So that** I can prevent further changes
+- [x] **As a** user
+      **I want to** lock a bingo board's goals
+      **So that** I can prevent further changes
 
 **Acceptance Criteria:**
 
-- [ ] User can lock a board's goals
-- [ ] Locked boards show a visual indicator
-- [ ] User cannot add, edit, or delete goals on locked boards
-- [ ] The only function a User can do to a locked board is delete it
+- [x] User can lock a board's goals
+- [x] Locked boards show a visual indicator
+- [x] User cannot add, edit, or delete goals on locked boards
+- [x] The only function a User can do to a locked board is delete it
 
 ## Goal Management
 
@@ -146,6 +146,7 @@
 - [x] User can click on a filled square to edit
 - [x] User can modify the goal text
 - [x] Changes are saved
+- [x] Edit is only available on an unlocked board.
 
 ### Story: Delete Goal
 
@@ -158,6 +159,7 @@
 - [x] User can delete a goal from a square
 - [x] Square becomes empty after deletion
 - [x] User receives confirmation before deletion
+- [x] Delete is only available on an unlocked board.
 
 ### Story: Mark Goal as Complete
 
@@ -173,6 +175,7 @@
 - [x] Completion triggers small confetti animation - https://github.com/catdad/canvas-confetti
 - [x] Completion triggers medium confetti animation if it completes a row, column, or diagonal
 - [x] Completion triggers big animation if it completes the board
+- [x] Goal completion is only available on a locked board.
 
 ### Story: View Goal Details
 
@@ -206,18 +209,6 @@
 **Note for AI Agent:** Do not work on anything below this line!
 
 ---
-
-### US-014: Check for Bingo
-
-**As a** user  
-**I want to** see when I've completed a bingo (row, column, or diagonal)  
-**So that** I can celebrate milestone achievements
-
-**Acceptance Criteria:**
-
-- System detects completed rows, columns, and diagonals
-- Completed bingos are visually highlighted
-- User receives notification/celebration when achieving a bingo
 
 ## Multi-User Features
 
