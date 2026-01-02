@@ -104,6 +104,19 @@
 - [ ] User receives confirmation before deletion
 - [ ] Deleted boards are permanently removed
 
+### Story: Lock Board Goals
+
+- [ ] **As a** user  
+       **I want to** lock a bingo board's goals  
+       **So that** I can prevent further changes
+
+**Acceptance Criteria:**
+
+- [ ] User can lock a board's goals
+- [ ] Locked boards show a visual indicator
+- [ ] User cannot add, edit, or delete goals on locked boards
+- [ ] The only function a User can do to a locked board is delete it
+
 ## Goal Management
 
 ### Story: Add Goal to Board
@@ -161,8 +174,8 @@
 ### Story: View Goal Details
 
 - [ ] **As a** user  
-      **I want to** view full details of a goal  
-      **So that** I can see the complete description if it's long
+       **I want to** view full details of a goal  
+       **So that** I can see the complete description if it's long
 
 **Acceptance Criteria:**
 

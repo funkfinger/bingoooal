@@ -121,6 +121,28 @@ boardGoals.forEach(goal => {
         margin-left: 12px;
       }
 
+      .board-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .edit-board-btn {
+        padding: 6px 12px;
+        background: #667eea;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .edit-board-btn:hover {
+        background: #5568d3;
+      }
+
       .user-info {
         display: flex;
         align-items: center;
@@ -349,19 +371,26 @@ boardGoals.forEach(goal => {
         font-weight: 500;
       }
 
-      .form-group textarea {
+      .form-group textarea,
+      .form-group input[type="text"],
+      .form-group input[type="number"] {
         width: 100%;
         padding: 12px;
         border: 1px solid #ddd;
         border-radius: 6px;
         font-size: 16px;
         font-family: inherit;
-        resize: vertical;
-        min-height: 100px;
         transition: border-color 0.2s;
       }
 
-      .form-group textarea:focus {
+      .form-group textarea {
+        resize: vertical;
+        min-height: 100px;
+      }
+
+      .form-group textarea:focus,
+      .form-group input[type="text"]:focus,
+      .form-group input[type="number"]:focus {
         outline: none;
         border-color: #667eea;
       }
@@ -454,9 +483,12 @@ boardGoals.forEach(goal => {
     <header class="header">
       <div class="header-left">
         <a href="/dashboard" class="back-btn">← Back to Dashboard</a>
-        <div>
-          <span class="board-title">{board.title}</span>
-          <span class="board-year">📅 {board.year}</span>
+        <div class="board-info">
+          <div>
+            <span class="board-title">{board.title}</span>
+            <span class="board-year">📅 {board.year}</span>
+          </div>
+          <button id="edit-board-btn" class="edit-board-btn">✏️ Edit</button>
         </div>
       </div>
       <div class="user-info">
@@ -568,6 +600,48 @@ boardGoals.forEach(goal => {
       </div>
     </div>
 
+    <!-- Edit Board Modal -->
+    <div id="edit-board-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Edit Board</h2>
+          <button id="close-edit-board-modal-btn" class="close-btn">×</button>
+        </div>
+        <form id="edit-board-form">
+          <div class="form-group">
+            <label for="board-title">Board Title</label>
+            <input
+              type="text"
+              id="board-title"
+              name="title"
+              placeholder="Enter board title..."
+              required
+              maxlength="100"
+              value={board.title}
+            />
+          </div>
+          <div class="form-group">
+            <label for="board-year">Year</label>
+            <input
+              type="number"
+              id="board-year"
+              name="year"
+              placeholder="2024"
+              required
+              min="1900"
+              max="2100"
+              value={board.year}
+            />
+          </div>
+          <div id="edit-board-form-error" class="error-message" style="display: none;"></div>
+          <div class="form-actions">
+            <button type="button" id="cancel-edit-board-btn" class="btn btn-secondary">Cancel</button>
+            <button type="submit" id="submit-edit-board-btn" class="btn btn-primary">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <script>
       import { celebrateGoalCompletion, celebrateBingo, celebrateBoardCompletion } from '../../lib/confetti';
 
@@ -590,8 +664,10 @@ boardGoals.forEach(goal => {
       // Modal elements
       const addModal = document.getElementById('add-goal-modal');
       const editModal = document.getElementById('edit-goal-modal');
+      const editBoardModal = document.getElementById('edit-board-modal');
       const addForm = document.getElementById('add-goal-form');
       const editForm = document.getElementById('edit-goal-form');
+      const editBoardForm = document.getElementById('edit-board-form');
 
       // Add modal controls
       const closeAddModalBtn = document.getElementById('close-add-modal-btn');
@@ -608,6 +684,15 @@ boardGoals.forEach(goal => {
       const editFormError = document.getElementById('edit-form-error');
       const editGoalTextInput = document.getElementById('edit-goal-text');
       const goalCompletedCheckbox = document.getElementById('goal-completed');
+
+      // Edit board modal controls
+      const editBoardBtn = document.getElementById('edit-board-btn');
+      const closeEditBoardModalBtn = document.getElementById('close-edit-board-modal-btn');
+      const cancelEditBoardBtn = document.getElementById('cancel-edit-board-btn');
+      const submitEditBoardBtn = document.getElementById('submit-edit-board-btn');
+      const editBoardFormError = document.getElementById('edit-board-form-error');
+      const boardTitleInput = document.getElementById('board-title');
+      const boardYearInput = document.getElementById('board-year');
 
       // Open add modal
       function openAddModal(position) {
@@ -647,6 +732,21 @@ boardGoals.forEach(goal => {
         }
       }
 
+      // Open edit board modal
+      function openEditBoardModal() {
+        editBoardModal?.classList.add('active');
+        setTimeout(() => boardTitleInput?.focus(), 100);
+      }
+
+      // Close edit board modal
+      function closeEditBoardModal() {
+        editBoardModal?.classList.remove('active');
+        if (editBoardFormError) {
+          editBoardFormError.style.display = 'none';
+          editBoardFormError.textContent = '';
+        }
+      }
+
       // Event listeners for add modal
       closeAddModalBtn?.addEventListener('click', closeAddModal);
       cancelAddBtn?.addEventListener('click', closeAddModal);
@@ -659,6 +759,14 @@ boardGoals.forEach(goal => {
       cancelEditBtn?.addEventListener('click', closeEditModal);
       editModal?.addEventListener('click', (e) => {
         if (e.target === editModal) closeEditModal();
+      });
+
+      // Event listeners for edit board modal
+      editBoardBtn?.addEventListener('click', openEditBoardModal);
+      closeEditBoardModalBtn?.addEventListener('click', closeEditBoardModal);
+      cancelEditBoardBtn?.addEventListener('click', closeEditBoardModal);
+      editBoardModal?.addEventListener('click', (e) => {
+        if (e.target === editBoardModal) closeEditBoardModal();
       });
 
       // Handle cell clicks
@@ -811,6 +919,54 @@ boardGoals.forEach(goal => {
         }
       });
 
+      // Handle edit board form submission
+      editBoardForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const title = boardTitleInput.value.trim();
+        const year = parseInt(boardYearInput.value);
+
+        if (!title) {
+          showEditBoardError('Please enter a board title');
+          return;
+        }
+
+        if (!year || year < 1900 || year > 2100) {
+          showEditBoardError('Please enter a valid year (1900-2100)');
+          return;
+        }
+
+        submitEditBoardBtn.disabled = true;
+        submitEditBoardBtn.textContent = 'Saving...';
+
+        try {
+          const response = await fetch('/api/boards/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              board_id: boardId,
+              title: title,
+              year: year,
+            }),
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            window.location.reload();
+          } else {
+            showEditBoardError(result.error || 'Failed to update board');
+            submitEditBoardBtn.disabled = false;
+            submitEditBoardBtn.textContent = 'Save Changes';
+          }
+        } catch (error) {
+          console.error('Error updating board:', error);
+          showEditBoardError('An unexpected error occurred');
+          submitEditBoardBtn.disabled = false;
+          submitEditBoardBtn.textContent = 'Save Changes';
+        }
+      });
+
       function showAddError(message) {
         if (addFormError) {
           addFormError.textContent = message;
@@ -822,6 +978,13 @@ boardGoals.forEach(goal => {
         if (editFormError) {
           editFormError.textContent = message;
           editFormError.style.display = 'block';
+        }
+      }
+
+      function showEditBoardError(message) {
+        if (editBoardFormError) {
+          editBoardFormError.textContent = message;
+          editBoardFormError.style.display = 'block';
         }
       }
     </script>
