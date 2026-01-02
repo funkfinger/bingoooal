@@ -278,6 +278,176 @@ boardGoals.forEach(goal => {
           -webkit-line-clamp: 3;
         }
       }
+
+      /* Modal styles */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal.active {
+        display: flex;
+      }
+
+      .modal-content {
+        background: white;
+        border-radius: 12px;
+        padding: 32px;
+        max-width: 500px;
+        width: 90%;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+
+      .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+      }
+
+      .modal-header h2 {
+        font-size: 24px;
+        color: #333;
+      }
+
+      .close-btn {
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: #999;
+        cursor: pointer;
+        padding: 0;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        transition: background 0.2s;
+      }
+
+      .close-btn:hover {
+        background: #f0f0f0;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #333;
+        font-weight: 500;
+      }
+
+      .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 16px;
+        font-family: inherit;
+        resize: vertical;
+        min-height: 100px;
+        transition: border-color 0.2s;
+      }
+
+      .form-group textarea:focus {
+        outline: none;
+        border-color: #667eea;
+      }
+
+      .form-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+        margin-top: 24px;
+      }
+
+      .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .btn-primary {
+        background: #667eea;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: #5568d3;
+      }
+
+      .btn-primary:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+      }
+
+      .btn-secondary {
+        background: #f0f0f0;
+        color: #333;
+      }
+
+      .btn-secondary:hover {
+        background: #e0e0e0;
+      }
+
+      .btn-danger {
+        background: #e53e3e;
+        color: white;
+      }
+
+      .btn-danger:hover {
+        background: #c53030;
+      }
+
+      .btn-success {
+        background: #38a169;
+        color: white;
+      }
+
+      .btn-success:hover {
+        background: #2f855a;
+      }
+
+      .error-message {
+        color: #e53e3e;
+        font-size: 14px;
+        margin-top: 8px;
+      }
+
+      .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 20px;
+      }
+
+      .checkbox-group input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+      }
+
+      .checkbox-group label {
+        margin: 0;
+        cursor: pointer;
+        font-weight: normal;
+      }
     </style>
   </head>
   <body>
@@ -338,30 +508,298 @@ boardGoals.forEach(goal => {
       </div>
     </div>
 
+    <!-- Add Goal Modal -->
+    <div id="add-goal-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Add Goal</h2>
+          <button id="close-add-modal-btn" class="close-btn">×</button>
+        </div>
+        <form id="add-goal-form">
+          <div class="form-group">
+            <label for="goal-text">Goal Description</label>
+            <textarea
+              id="goal-text"
+              name="text"
+              placeholder="Enter your goal..."
+              required
+              maxlength="200"
+            ></textarea>
+          </div>
+          <div id="add-form-error" class="error-message" style="display: none;"></div>
+          <div class="form-actions">
+            <button type="button" id="cancel-add-btn" class="btn btn-secondary">Cancel</button>
+            <button type="submit" id="submit-add-btn" class="btn btn-primary">Add Goal</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Edit Goal Modal -->
+    <div id="edit-goal-modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Edit Goal</h2>
+          <button id="close-edit-modal-btn" class="close-btn">×</button>
+        </div>
+        <form id="edit-goal-form">
+          <div class="form-group">
+            <label for="edit-goal-text">Goal Description</label>
+            <textarea
+              id="edit-goal-text"
+              name="text"
+              placeholder="Enter your goal..."
+              required
+              maxlength="200"
+            ></textarea>
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="goal-completed" name="completed" />
+            <label for="goal-completed">Mark as completed</label>
+          </div>
+          <div id="edit-form-error" class="error-message" style="display: none;"></div>
+          <div class="form-actions">
+            <button type="button" id="delete-goal-btn" class="btn btn-danger">Delete</button>
+            <div style="flex: 1;"></div>
+            <button type="button" id="cancel-edit-btn" class="btn btn-secondary">Cancel</button>
+            <button type="submit" id="submit-edit-btn" class="btn btn-primary">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <script>
+      const boardId = '{id}';
+      let currentPosition: number | null = null;
+      let currentGoalId: string | null = null;
+
       // Logout functionality
       const logoutBtn = document.getElementById('logout-btn');
       logoutBtn?.addEventListener('click', () => {
         window.location.href = '/logout';
       });
 
+      // Modal elements
+      const addModal = document.getElementById('add-goal-modal');
+      const editModal = document.getElementById('edit-goal-modal');
+      const addForm = document.getElementById('add-goal-form') as HTMLFormElement;
+      const editForm = document.getElementById('edit-goal-form') as HTMLFormElement;
+
+      // Add modal controls
+      const closeAddModalBtn = document.getElementById('close-add-modal-btn');
+      const cancelAddBtn = document.getElementById('cancel-add-btn');
+      const submitAddBtn = document.getElementById('submit-add-btn') as HTMLButtonElement;
+      const addFormError = document.getElementById('add-form-error');
+      const goalTextInput = document.getElementById('goal-text') as HTMLTextAreaElement;
+
+      // Edit modal controls
+      const closeEditModalBtn = document.getElementById('close-edit-modal-btn');
+      const cancelEditBtn = document.getElementById('cancel-edit-btn');
+      const submitEditBtn = document.getElementById('submit-edit-btn') as HTMLButtonElement;
+      const deleteGoalBtn = document.getElementById('delete-goal-btn');
+      const editFormError = document.getElementById('edit-form-error');
+      const editGoalTextInput = document.getElementById('edit-goal-text') as HTMLTextAreaElement;
+      const goalCompletedCheckbox = document.getElementById('goal-completed') as HTMLInputElement;
+
+      // Open add modal
+      function openAddModal(position: number) {
+        currentPosition = position;
+        addModal?.classList.add('active');
+        setTimeout(() => goalTextInput?.focus(), 100);
+      }
+
+      // Close add modal
+      function closeAddModal() {
+        addModal?.classList.remove('active');
+        addForm?.reset();
+        currentPosition = null;
+        if (addFormError) {
+          addFormError.style.display = 'none';
+          addFormError.textContent = '';
+        }
+      }
+
+      // Open edit modal
+      function openEditModal(goalId: string, text: string, completed: boolean) {
+        currentGoalId = goalId;
+        editGoalTextInput.value = text;
+        goalCompletedCheckbox.checked = completed;
+        editModal?.classList.add('active');
+        setTimeout(() => editGoalTextInput?.focus(), 100);
+      }
+
+      // Close edit modal
+      function closeEditModal() {
+        editModal?.classList.remove('active');
+        editForm?.reset();
+        currentGoalId = null;
+        if (editFormError) {
+          editFormError.style.display = 'none';
+          editFormError.textContent = '';
+        }
+      }
+
+      // Event listeners for add modal
+      closeAddModalBtn?.addEventListener('click', closeAddModal);
+      cancelAddBtn?.addEventListener('click', closeAddModal);
+      addModal?.addEventListener('click', (e) => {
+        if (e.target === addModal) closeAddModal();
+      });
+
+      // Event listeners for edit modal
+      closeEditModalBtn?.addEventListener('click', closeEditModal);
+      cancelEditBtn?.addEventListener('click', closeEditModal);
+      editModal?.addEventListener('click', (e) => {
+        if (e.target === editModal) closeEditModal();
+      });
+
       // Handle cell clicks
       document.querySelectorAll('.bingo-cell').forEach((cell) => {
         cell.addEventListener('click', () => {
-          const position = cell.getAttribute('data-position');
+          const position = parseInt(cell.getAttribute('data-position') || '0');
           const goalId = cell.getAttribute('data-goal-id');
 
-          console.log('Cell clicked:', { position, goalId });
-
           if (goalId) {
-            // TODO: Open edit/complete goal modal
-            alert('Edit goal functionality coming soon!');
+            // Get goal data from cell
+            const goalText = cell.querySelector('.goal-text')?.textContent || '';
+            const isCompleted = cell.classList.contains('completed');
+            openEditModal(goalId, goalText, isCompleted);
           } else {
-            // TODO: Open add goal modal
-            alert('Add goal functionality coming soon!');
+            openAddModal(position);
           }
         });
       });
+
+      // Handle add goal form submission
+      addForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const text = goalTextInput.value.trim();
+        if (!text) {
+          showAddError('Please enter a goal description');
+          return;
+        }
+
+        submitAddBtn.disabled = true;
+        submitAddBtn.textContent = 'Adding...';
+
+        try {
+          const response = await fetch('/api/goals/create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              board_id: boardId,
+              position: currentPosition,
+              text: text,
+            }),
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            window.location.reload();
+          } else {
+            showAddError(result.error || 'Failed to add goal');
+            submitAddBtn.disabled = false;
+            submitAddBtn.textContent = 'Add Goal';
+          }
+        } catch (error) {
+          console.error('Error adding goal:', error);
+          showAddError('An unexpected error occurred');
+          submitAddBtn.disabled = false;
+          submitAddBtn.textContent = 'Add Goal';
+        }
+      });
+
+      // Handle edit goal form submission
+      editForm?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const text = editGoalTextInput.value.trim();
+        const completed = goalCompletedCheckbox.checked;
+
+        if (!text) {
+          showEditError('Please enter a goal description');
+          return;
+        }
+
+        submitEditBtn.disabled = true;
+        submitEditBtn.textContent = 'Saving...';
+
+        try {
+          const response = await fetch('/api/goals/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              goal_id: currentGoalId,
+              text: text,
+              completed: completed,
+            }),
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            window.location.reload();
+          } else {
+            showEditError(result.error || 'Failed to update goal');
+            submitEditBtn.disabled = false;
+            submitEditBtn.textContent = 'Save Changes';
+          }
+        } catch (error) {
+          console.error('Error updating goal:', error);
+          showEditError('An unexpected error occurred');
+          submitEditBtn.disabled = false;
+          submitEditBtn.textContent = 'Save Changes';
+        }
+      });
+
+      // Handle delete goal
+      deleteGoalBtn?.addEventListener('click', async () => {
+        if (!confirm('Are you sure you want to delete this goal?')) {
+          return;
+        }
+
+        deleteGoalBtn.disabled = true;
+        deleteGoalBtn.textContent = 'Deleting...';
+
+        try {
+          const response = await fetch('/api/goals/delete', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ goal_id: currentGoalId }),
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            window.location.reload();
+          } else {
+            showEditError(result.error || 'Failed to delete goal');
+            deleteGoalBtn.disabled = false;
+            deleteGoalBtn.textContent = 'Delete';
+          }
+        } catch (error) {
+          console.error('Error deleting goal:', error);
+          showEditError('An unexpected error occurred');
+          deleteGoalBtn.disabled = false;
+          deleteGoalBtn.textContent = 'Delete';
+        }
+      });
+
+      function showAddError(message: string) {
+        if (addFormError) {
+          addFormError.textContent = message;
+          addFormError.style.display = 'block';
+        }
+      }
+
+      function showEditError(message: string) {
+        if (editFormError) {
+          editFormError.textContent = message;
+          editFormError.style.display = 'block';
+        }
+      }
     </script>
   </body>
 </html>
