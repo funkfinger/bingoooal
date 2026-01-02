@@ -131,7 +131,7 @@
 - [x] User can enter goal text/description
 - [x] Goal is saved to the specific square
 - [x] Maximum character limit is enforced for readability
-- [ ] Sample goals are populated for inspiration - data/example-goals.json
+- [x] Sample goals are populated for inspiration - data/example-goals.json
 
 ### Story: Edit Goal
 
@@ -202,14 +202,6 @@
 ---
 
 **Note for AI Agent:** Do not work on anything below this line!
-
----
-
----
-
-**Note for AI Agent:** Do not work on anything below this line!
-
----
 
 ---
 

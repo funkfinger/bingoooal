@@ -94,6 +94,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Built modal UI for editing board details
   - Implemented form validation and error handling
   - Added authorization checks to ensure users can only edit their own boards
+- Added goal inspiration feature:
+  - Created example-goals.json with 126 wholesome, achievable goal suggestions
+  - Added "✨ Inspire Me" button to Add Goal modal
+  - Implemented random goal suggestion functionality
+  - Styled button with gradient and positioned inside textarea for better UX
 
 ### Changed
 
