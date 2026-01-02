@@ -144,6 +144,42 @@ boardGoals.forEach(goal => {
         background: #5568d3;
       }
 
+      .lock-btn {
+        padding: 6px 12px;
+        background: #f59e0b;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .lock-btn:hover {
+        background: #d97706;
+      }
+
+      .lock-btn.locked {
+        background: #10b981;
+      }
+
+      .lock-btn.locked:hover {
+        background: #059669;
+      }
+
+      .locked-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        background: #10b981;
+        color: white;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 500;
+      }
+
       .user-info {
         display: flex;
         align-items: center;
@@ -507,6 +543,19 @@ boardGoals.forEach(goal => {
         cursor: pointer;
         font-weight: normal;
       }
+
+      .info-message {
+        background: #fef3c7;
+        border: 1px solid #f59e0b;
+        color: #92400e;
+        padding: 12px;
+        border-radius: 6px;
+        font-size: 14px;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
     </style>
   </head>
   <body>
@@ -517,8 +566,16 @@ boardGoals.forEach(goal => {
           <div>
             <span class="board-title">{board.title}</span>
             <span class="board-year">📅 {board.year}</span>
+            {board.locked && (
+              <span class="locked-indicator">
+                🔒 Locked
+              </span>
+            )}
           </div>
           <button id="edit-board-btn" class="edit-board-btn">✏️ Edit</button>
+          <button id="lock-btn" class={`lock-btn ${board.locked ? 'locked' : ''}`}>
+            {board.locked ? '🔓 Unlock' : '🔒 Lock'}
+          </button>
         </div>
       </div>
       <div class="user-info">
@@ -610,6 +667,9 @@ boardGoals.forEach(goal => {
           <button id="close-edit-modal-btn" class="close-btn">×</button>
         </div>
         <form id="edit-goal-form">
+          <div id="locked-info" class="info-message" style="display: none;">
+            🔒 This board is locked. You can only update completion status.
+          </div>
           <div class="form-group">
             <label for="edit-goal-text">Goal Description</label>
             <textarea
@@ -688,9 +748,10 @@ boardGoals.forEach(goal => {
       window.celebrateBoardCompletion = celebrateBoardCompletion;
     </script>
 
-    <script define:vars={{ boardId: id, exampleGoals: exampleGoalsData.goals }}>
+    <script define:vars={{ boardId: id, exampleGoals: exampleGoalsData.goals, boardLocked: board.locked }}>
       let currentPosition = null;
       let currentGoalId = null;
+      let isLocked = boardLocked;
 
       // Logout functionality
       const logoutBtn = document.getElementById('logout-btn');
@@ -733,6 +794,12 @@ boardGoals.forEach(goal => {
       const boardTitleInput = document.getElementById('board-title');
       const boardYearInput = document.getElementById('board-year');
 
+      // Lock button
+      const lockBtn = document.getElementById('lock-btn');
+
+      // Locked info message
+      const lockedInfo = document.getElementById('locked-info');
+
       // Open add modal
       function openAddModal(position) {
         currentPosition = position;
@@ -756,8 +823,32 @@ boardGoals.forEach(goal => {
         currentGoalId = goalId;
         editGoalTextInput.value = text;
         goalCompletedCheckbox.checked = completed;
+
+        // If board is locked, disable text editing and delete button
+        if (isLocked) {
+          lockedInfo.style.display = 'flex';
+          editGoalTextInput.disabled = true;
+          deleteGoalBtn.disabled = true;
+          deleteGoalBtn.style.opacity = '0.5';
+          deleteGoalBtn.style.cursor = 'not-allowed';
+          submitEditBtn.textContent = 'Update Completion';
+        } else {
+          lockedInfo.style.display = 'none';
+          editGoalTextInput.disabled = false;
+          deleteGoalBtn.disabled = false;
+          deleteGoalBtn.style.opacity = '1';
+          deleteGoalBtn.style.cursor = 'pointer';
+          submitEditBtn.textContent = 'Save Changes';
+        }
+
         editModal?.classList.add('active');
-        setTimeout(() => editGoalTextInput?.focus(), 100);
+        setTimeout(() => {
+          if (isLocked) {
+            goalCompletedCheckbox?.focus();
+          } else {
+            editGoalTextInput?.focus();
+          }
+        }, 100);
       }
 
       // Close edit modal
@@ -821,6 +912,41 @@ boardGoals.forEach(goal => {
         }
       });
 
+      // Lock/Unlock button functionality
+      lockBtn?.addEventListener('click', async () => {
+        const newLockedState = !isLocked;
+
+        lockBtn.disabled = true;
+        lockBtn.textContent = newLockedState ? '🔒 Locking...' : '🔓 Unlocking...';
+
+        try {
+          const response = await fetch('/api/boards/toggle-lock', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              board_id: boardId,
+              locked: newLockedState,
+            }),
+          });
+
+          const result = await response.json();
+
+          if (result.success) {
+            // Reload page to update UI
+            window.location.reload();
+          } else {
+            alert(result.error || 'Failed to update lock status');
+            lockBtn.disabled = false;
+            lockBtn.textContent = isLocked ? '🔓 Unlock' : '🔒 Lock';
+          }
+        } catch (error) {
+          console.error('Error toggling lock:', error);
+          alert('An unexpected error occurred');
+          lockBtn.disabled = false;
+          lockBtn.textContent = isLocked ? '🔓 Unlock' : '🔒 Lock';
+        }
+      });
+
       // Handle cell clicks
       document.querySelectorAll('.bingo-cell').forEach((cell) => {
         cell.addEventListener('click', () => {
@@ -833,6 +959,11 @@ boardGoals.forEach(goal => {
             const isCompleted = cell.classList.contains('completed');
             openEditModal(goalId, goalText, isCompleted);
           } else {
+            // Only allow adding goals if board is unlocked
+            if (isLocked) {
+              alert('This board is locked. Unlock it to add new goals.');
+              return;
+            }
             openAddModal(position);
           }
         });
@@ -886,9 +1017,19 @@ boardGoals.forEach(goal => {
         const text = editGoalTextInput.value.trim();
         const completed = goalCompletedCheckbox.checked;
 
-        if (!text) {
-          showEditError('Please enter a goal description');
-          return;
+        // If locked, only allow completion status changes
+        if (isLocked) {
+          // Text should not have changed, but just in case
+          if (!text) {
+            showEditError('Goal text cannot be empty');
+            return;
+          }
+        } else {
+          // If unlocked, validate text
+          if (!text) {
+            showEditError('Please enter a goal description');
+            return;
+          }
         }
 
         submitEditBtn.disabled = true;
