@@ -103,98 +103,9 @@
 - [ ] User receives confirmation before deletion
 - [ ] Deleted boards are permanently removed
 
----
-
-**Note for AI Agent:** Do not work on anything below this line!
-
----
-
-### Story: User Can Create Group
-
-- [ ] **As a** logged-in user  
-      **I want to** create a group that other users can join
-      **So that** I can share or collaborate on goals with others
-
-**Acceptance Criteria:**
-
-- [ ] User can create a group
-- [ ] User can invite other users to join the group
-- [ ] User can add goal boards to the group
-
----
-
-**Note for AI Agent:** Do not work on anything below this line!
-
----
-
-## User Management
-
-### Story: User Logout
-
-- [ ] **As a** logged-in user  
-      **I want to** log out of my account  
-      **So that** I can keep my goals private on shared devices
-
-**Acceptance Criteria:**
-
-- [ ] User can log out from any page
-- [ ] Session is cleared upon logout
-- [ ] User is redirected to login page
-
-## Bingo Board Management
-
-### US-004: Create Bingo Board
-
-**As a** user  
-**I want to** create a new bingo board for the year  
-**So that** I can organize my yearly goals
-
-**Acceptance Criteria:**
-
-- User can create a new 5x5 bingo board
-- User can set a title/name for the board
-- User can specify the year for the board
-- Board is saved and associated with the user
-
-### US-005: View Bingo Boards
-
-**As a** user  
-**I want to** view all my bingo boards  
-**So that** I can see my different goal collections
-
-**Acceptance Criteria:**
-
-- User sees a list/grid of all their boards
-- Each board shows its title and year
-- User can click to view board details
-
-### US-006: Edit Bingo Board
-
-**As a** user  
-**I want to** edit my bingo board details  
-**So that** I can update the title or year if needed
-
-**Acceptance Criteria:**
-
-- User can edit board title
-- User can edit board year
-- Changes are saved immediately or with confirmation
-
-### US-007: Delete Bingo Board
-
-**As a** user  
-**I want to** delete a bingo board  
-**So that** I can remove boards I no longer need
-
-**Acceptance Criteria:**
-
-- User can delete a board
-- User receives confirmation before deletion
-- Deleted boards are permanently removed
-
 ## Goal Management
 
-### US-008: Add Goal to Board
+### Story: Add Goal to Board
 
 **As a** user  
 **I want to** add a goal to a specific square on my bingo board  
@@ -254,6 +165,34 @@
 - User can click/hover to see full goal text
 - Modal or tooltip displays complete information
 - Easy to close and return to board view
+
+---
+
+**Note for AI Agent:** Do not work on anything below this line!
+
+---
+
+### Story: User Can Create Group
+
+- [ ] **As a** logged-in user  
+       **I want to** create a group that other users can join
+      **So that** I can share or collaborate on goals with others
+
+**Acceptance Criteria:**
+
+- [ ] User can create a group
+- [ ] User can invite other users to join the group
+- [ ] User can add goal boards to the group
+
+---
+
+**Note for AI Agent:** Do not work on anything below this line!
+
+---
+
+---
+
+## Goal Management
 
 ## Progress Tracking
 

@@ -568,8 +568,7 @@ boardGoals.forEach(goal => {
       </div>
     </div>
 
-    <script>
-      const boardId = '{id}';
+    <script define:vars={{ boardId: id }}>
       let currentPosition: number | null = null;
       let currentGoalId: string | null = null;
 
