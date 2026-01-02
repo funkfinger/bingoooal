@@ -56,41 +56,41 @@
 
 ### Story: Create Bingo Board
 
-- [ ] **As a** user  
-       **I want to** create a new bingo board for the year  
-       **So that** I can organize my yearly goals
+- [x] **As a** user
+      **I want to** create a new bingo board for the year
+      **So that** I can organize my yearly goals
 
 **Acceptance Criteria:**
 
-- [ ] User can create a new 5x5 bingo board
-- [ ] User can set a title/name for the board
-- [ ] User can specify the year for the board
-- [ ] Board is saved and associated with the user
+- [x] User can create a new 5x5 bingo board
+- [x] User can set a title/name for the board
+- [x] User can specify the year for the board
+- [x] Board is saved and associated with the user
 - [ ] Optional center square is free space and already completed
 
 ### Story: View Bingo Boards
 
-- [ ] **As a** user  
-       **I want to** view all my bingo boards  
-       **So that** I can see my different goal collections
+- [x] **As a** user
+      **I want to** view all my bingo boards
+      **So that** I can see my different goal collections
 
 **Acceptance Criteria:**
 
-- [ ] User sees a list/grid of all their boards
-- [ ] Each board shows its title and year
-- [ ] User can click to view board details
+- [x] User sees a list/grid of all their boards
+- [x] Each board shows its title and year
+- [x] User can click to view board details
 
 ### Story: Edit Bingo Board
 
-- [ ] **As a** user  
-       **I want to** edit my bingo board details  
-       **So that** I can update the title or year if needed
+- [x] **As a** user
+      **I want to** edit my bingo board details
+      **So that** I can update the title or year if needed
 
 **Acceptance Criteria:**
 
-- [ ] User can edit board title
-- [ ] User can edit board year
-- [ ] Changes are saved immediately or with confirmation
+- [x] User can edit board title
+- [x] User can edit board year
+- [x] Changes are saved immediately or with confirmation
 
 ### Story: Delete Bingo Board
 
@@ -121,55 +121,55 @@
 
 ### Story: Add Goal to Board
 
-- [ ] **As a** user  
-       **I want to** add a goal to a specific square on my bingo board  
-       **So that** I can fill my board with yearly objectives
+- [x] **As a** user
+      **I want to** add a goal to a specific square on my bingo board
+      **So that** I can fill my board with yearly objectives
 
 **Acceptance Criteria:**
 
-- [ ] User can click on an empty square to add a goal
-- [ ] User can enter goal text/description
-- [ ] Goal is saved to the specific square
-- [ ] Maximum character limit is enforced for readability
+- [x] User can click on an empty square to add a goal
+- [x] User can enter goal text/description
+- [x] Goal is saved to the specific square
+- [x] Maximum character limit is enforced for readability
 
 ### Story: Edit Goal
 
-- [ ] **As a** user  
-       **I want to** edit an existing goal  
-       **So that** I can refine or update my objectives
+- [x] **As a** user
+      **I want to** edit an existing goal
+      **So that** I can refine or update my objectives
 
 **Acceptance Criteria:**
 
-- [ ] User can click on a filled square to edit
-- [ ] User can modify the goal text
-- [ ] Changes are saved
+- [x] User can click on a filled square to edit
+- [x] User can modify the goal text
+- [x] Changes are saved
 
 ### Story: Delete Goal
 
-- [ ] **As a** user  
-       **I want to** remove a goal from a square  
-       **So that** I can clear unwanted goals
+- [x] **As a** user
+      **I want to** remove a goal from a square
+      **So that** I can clear unwanted goals
 
 **Acceptance Criteria:**
 
-- [ ] User can delete a goal from a square
-- [ ] Square becomes empty after deletion
-- [ ] User receives confirmation before deletion
+- [x] User can delete a goal from a square
+- [x] Square becomes empty after deletion
+- [x] User receives confirmation before deletion
 
 ### Story: Mark Goal as Complete
 
-- [ ] **As a** user  
-       **I want to** mark a goal as completed  
-       **So that** I can track my progress throughout the year
+- [x] **As a** user
+      **I want to** mark a goal as completed
+      **So that** I can track my progress throughout the year
 
 **Acceptance Criteria:**
 
-- [ ] User can mark/unmark a goal as complete
-- [ ] Completed goals are visually distinct (e.g., different color, checkmark)
-- [ ] Completion status is saved
-- [ ] Completion triggers small confetti animation - https://github.com/catdad/canvas-confetti
-- [ ] Completion triggers medium confetti animation if it completes a row, column, or diagonal
-- [ ] Completion triggers big animation if it completes the board
+- [x] User can mark/unmark a goal as complete
+- [x] Completed goals are visually distinct (e.g., different color, checkmark)
+- [x] Completion status is saved
+- [x] Completion triggers small confetti animation - https://github.com/catdad/canvas-confetti
+- [x] Completion triggers medium confetti animation if it completes a row, column, or diagonal
+- [x] Completion triggers big animation if it completes the board
 
 ### Story: View Goal Details
 
