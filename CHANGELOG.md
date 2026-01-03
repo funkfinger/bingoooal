@@ -195,10 +195,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - All goal operations respect board lock status
   - Comprehensive error handling and loading states
 - Enhanced board navigation:
-  - Made board title clickable to return to dashboard
-  - Added hover effect on board title with color change
-  - Added tooltip indicating title is clickable
-  - Complements existing "Back to Dashboard" button
+  - Added "← Back to Dashboard" button at top of board view
+  - Existing "← Back to Dashboard" button remains at bottom
+  - Users now have clear navigation options at both top and bottom of page
 
 ### Changed
 

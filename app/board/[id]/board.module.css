@@ -50,6 +50,10 @@
   padding: 40px 24px;
 }
 
+.backButtonTop {
+  margin-bottom: 20px;
+}
+
 .boardHeader {
   background: white;
   border-radius: 12px;
@@ -61,27 +65,10 @@
   align-items: center;
 }
 
-.boardTitleSection {
-  cursor: pointer;
-  transition: all 0.2s;
-  padding: 8px;
-  margin: -8px;
-  border-radius: 8px;
-}
-
-.boardTitleSection:hover {
-  background: rgba(102, 126, 234, 0.05);
-}
-
-.boardTitleSection:hover .clickableTitle {
-  color: #667eea;
-}
-
-.clickableTitle {
+.boardHeader h1 {
   color: #333;
   margin: 0 0 8px 0;
   font-size: 28px;
-  transition: color 0.2s;
 }
 
 .year {
