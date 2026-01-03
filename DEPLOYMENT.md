@@ -1,6 +1,6 @@
 # Deployment Guide - Vercel
 
-This guide will help you deploy your Bingoal app to Vercel with automatic deployments from GitHub.
+This guide will help you deploy your Bingoooal app to Vercel with automatic deployments from GitHub.
 
 ## Prerequisites
 
@@ -22,7 +22,7 @@ git push origin main
 
 1. Go to [vercel.com](https://vercel.com) and sign in with your GitHub account
 2. Click "Add New Project"
-3. Import your `bingoal` repository from GitHub
+3. Import your `bingoooal` repository from GitHub
 4. Vercel will automatically detect it's an Astro project
 
 ## Step 3: Configure Build Settings

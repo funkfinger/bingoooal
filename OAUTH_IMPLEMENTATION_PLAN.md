@@ -1,4 +1,4 @@
-# OAuth Implementation Plan for Bingoal
+# OAuth Implementation Plan for Bingoooal
 
 ## Recommendation: Supabase Auth
 
@@ -7,16 +7,19 @@ After researching various OAuth solutions for Astro, **Supabase Auth** is the re
 ### Why Supabase Auth?
 
 1. **Built-in OAuth Support**
+
    - Pre-configured providers for Google, GitHub, and many others
    - No need to manually handle OAuth flows
    - Automatic token management and refresh
 
 2. **Database Integration**
+
    - Includes PostgreSQL database for storing user data and bingo boards
    - Row Level Security (RLS) for data protection
    - Real-time subscriptions for live updates
 
 3. **Astro Compatibility**
+
    - Official Supabase SSR package works seamlessly with Astro
    - Server-side authentication via Astro middleware
    - Easy integration with Astro API routes
@@ -30,22 +33,24 @@ After researching various OAuth solutions for Astro, **Supabase Auth** is the re
 
 ### Alternative Options Considered
 
-| Solution | Pros | Cons | Verdict |
-|----------|------|------|---------|
-| **Supabase Auth** | All-in-one (auth + DB), easy OAuth setup, free tier | Vendor lock-in | ✅ **Recommended** |
-| **Lucia** | Lightweight, framework-agnostic, full control | Manual OAuth setup, need separate DB | Good for custom needs |
-| **Auth.js** | Feature-rich, many providers | Better suited for Next.js, heavier | Not ideal for Astro |
+| Solution          | Pros                                                | Cons                                 | Verdict               |
+| ----------------- | --------------------------------------------------- | ------------------------------------ | --------------------- |
+| **Supabase Auth** | All-in-one (auth + DB), easy OAuth setup, free tier | Vendor lock-in                       | ✅ **Recommended**    |
+| **Lucia**         | Lightweight, framework-agnostic, full control       | Manual OAuth setup, need separate DB | Good for custom needs |
+| **Auth.js**       | Feature-rich, many providers                        | Better suited for Next.js, heavier   | Not ideal for Astro   |
 
 ## Implementation Steps
 
 ### Phase 1: Supabase Setup
 
 1. **Create Supabase Project**
+
    - Sign up at https://supabase.com
    - Create new project
    - Note the project URL and anon key
 
 2. **Configure OAuth Providers**
+
    - Enable Google OAuth in Supabase dashboard
    - Enable GitHub OAuth in Supabase dashboard
    - Set up redirect URLs
@@ -59,14 +64,17 @@ After researching various OAuth solutions for Astro, **Supabase Auth** is the re
 ### Phase 2: Astro Integration
 
 1. **Environment Variables**
+
    - Create `.env` file with Supabase credentials
    - Add to `.gitignore`
 
 2. **Create Supabase Client**
+
    - Server-side client for API routes
    - Client-side client for browser interactions
 
 3. **Set Up Middleware**
+
    - Create Astro middleware for session management
    - Protect authenticated routes
 
@@ -78,12 +86,14 @@ After researching various OAuth solutions for Astro, **Supabase Auth** is the re
 ### Phase 3: Database Schema
 
 1. **Users Table** (auto-created by Supabase Auth)
+
    - id (UUID)
    - email
    - created_at
    - metadata (JSON)
 
 2. **Bingo Boards Table**
+
    - id (UUID)
    - user_id (FK to users)
    - title (TEXT)
@@ -104,6 +114,7 @@ After researching various OAuth solutions for Astro, **Supabase Auth** is the re
 ### Phase 4: Security
 
 1. **Row Level Security (RLS)**
+
    - Users can only read/write their own boards
    - Public boards can be read by anyone
    - Implement sharing permissions
@@ -128,4 +139,3 @@ After researching various OAuth solutions for Astro, **Supabase Auth** is the re
 - [Supabase Auth with Astro Guide](https://mihai-andrei.com/blog/how-to-add-supabase-auth-to-astro/)
 - [Supabase SSR Package](https://supabase.com/docs/guides/auth/server-side/migrating-to-ssr-from-auth-helpers)
 - [Astro Middleware Docs](https://docs.astro.build/en/guides/middleware/)
-

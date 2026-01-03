@@ -1,8 +1,8 @@
-# Database Schema - Bingoal
+# Database Schema - Bingoooal
 
 ## Overview
 
-This document describes the database schema for the Bingoal application using Supabase (PostgreSQL).
+This document describes the database schema for the Bingoooal application using Supabase (PostgreSQL).
 
 ## Tables
 
@@ -10,20 +10,22 @@ This document describes the database schema for the Bingoal application using Su
 
 Stores bingo board information.
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PRIMARY KEY, DEFAULT uuid_generate_v4() | Unique board identifier |
-| `user_id` | UUID | NOT NULL, FOREIGN KEY → auth.users(id) | Owner of the board |
-| `title` | TEXT | NOT NULL | Board title/name |
-| `year` | INTEGER | NOT NULL | Year for the board (e.g., 2025) |
-| `created_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | When board was created |
-| `updated_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Last update timestamp |
+| Column       | Type        | Constraints                             | Description                     |
+| ------------ | ----------- | --------------------------------------- | ------------------------------- |
+| `id`         | UUID        | PRIMARY KEY, DEFAULT uuid_generate_v4() | Unique board identifier         |
+| `user_id`    | UUID        | NOT NULL, FOREIGN KEY → auth.users(id)  | Owner of the board              |
+| `title`      | TEXT        | NOT NULL                                | Board title/name                |
+| `year`       | INTEGER     | NOT NULL                                | Year for the board (e.g., 2025) |
+| `created_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now()                 | When board was created          |
+| `updated_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now()                 | Last update timestamp           |
 
 **Indexes:**
+
 - `user_id` - For querying user's boards
 - `year` - For filtering by year
 
 **Row Level Security (RLS):**
+
 - Users can only view/edit/delete their own boards
 - Users can create new boards
 
@@ -33,25 +35,28 @@ Stores bingo board information.
 
 Stores individual goals within bingo boards.
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| `id` | UUID | PRIMARY KEY, DEFAULT uuid_generate_v4() | Unique goal identifier |
-| `board_id` | UUID | NOT NULL, FOREIGN KEY → boards(id) ON DELETE CASCADE | Parent board |
-| `position` | INTEGER | NOT NULL, CHECK (position >= 0 AND position <= 24) | Position on 5x5 grid (0-24) |
-| `text` | TEXT | NOT NULL | Goal description |
-| `completed` | BOOLEAN | NOT NULL, DEFAULT false | Completion status |
-| `completed_at` | TIMESTAMPTZ | NULL | When goal was completed |
-| `created_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | When goal was created |
-| `updated_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Last update timestamp |
+| Column         | Type        | Constraints                                          | Description                 |
+| -------------- | ----------- | ---------------------------------------------------- | --------------------------- |
+| `id`           | UUID        | PRIMARY KEY, DEFAULT uuid_generate_v4()              | Unique goal identifier      |
+| `board_id`     | UUID        | NOT NULL, FOREIGN KEY → boards(id) ON DELETE CASCADE | Parent board                |
+| `position`     | INTEGER     | NOT NULL, CHECK (position >= 0 AND position <= 24)   | Position on 5x5 grid (0-24) |
+| `text`         | TEXT        | NOT NULL                                             | Goal description            |
+| `completed`    | BOOLEAN     | NOT NULL, DEFAULT false                              | Completion status           |
+| `completed_at` | TIMESTAMPTZ | NULL                                                 | When goal was completed     |
+| `created_at`   | TIMESTAMPTZ | NOT NULL, DEFAULT now()                              | When goal was created       |
+| `updated_at`   | TIMESTAMPTZ | NOT NULL, DEFAULT now()                              | Last update timestamp       |
 
 **Constraints:**
+
 - UNIQUE(board_id, position) - Each position can only have one goal per board
 
 **Indexes:**
+
 - `board_id` - For querying board's goals
 - `completed` - For filtering completed/incomplete goals
 
 **Row Level Security (RLS):**
+
 - Users can only view/edit/delete goals on their own boards
 - Users can create new goals on their own boards
 
@@ -176,6 +181,5 @@ CREATE POLICY "Users can delete goals on own boards"
 - All timestamps use `TIMESTAMPTZ` for timezone awareness
 - `ON DELETE CASCADE` ensures goals are deleted when their board is deleted
 - Row Level Security (RLS) ensures users can only access their own data
-- The `position` field uses 0-24 to represent the 5x5 grid (row * 5 + col)
+- The `position` field uses 0-24 to represent the 5x5 grid (row \* 5 + col)
 - The `UNIQUE(board_id, position)` constraint prevents duplicate goals at the same position
-

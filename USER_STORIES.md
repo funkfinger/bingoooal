@@ -1,4 +1,4 @@
-# User Stories - Bingoal
+# User Stories - Bingoooal
 
 ## Application Structure
 
@@ -23,7 +23,7 @@
 
 **Acceptance Criteria:**
 
-- [ ] GitHub Pages is configured
+- [ ] AWS Amplify is configured
 - [ ] Application is deployed and accessible
 - [ ] CI/CD pipeline is set up for automatic deployments
 

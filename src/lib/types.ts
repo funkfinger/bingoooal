@@ -1,4 +1,4 @@
-// Database types for Bingoal
+// Database types for Bingoooal
 
 export interface Board {
   id: string;

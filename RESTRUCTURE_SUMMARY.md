@@ -5,8 +5,9 @@
 We restructured the project from a non-standard nested structure to follow standard Astro/Vercel conventions.
 
 ### Before
+
 ```
-bingoal/
+bingoooal/
 ├── src/                    # Nested project directory
 │   ├── package.json
 │   ├── astro.config.mjs
@@ -20,8 +21,9 @@ bingoal/
 ```
 
 ### After (Standard Structure)
+
 ```
-bingoal/
+bingoooal/
 ├── package.json            # Moved to root
 ├── astro.config.mjs        # Moved to root
 ├── tsconfig.json           # Moved to root
@@ -46,6 +48,7 @@ bingoal/
 ## Files Changed
 
 ### Moved
+
 - `src/package.json` → `package.json`
 - `src/package-lock.json` → `package-lock.json`
 - `src/astro.config.mjs` → `astro.config.mjs`
@@ -56,16 +59,19 @@ bingoal/
 - `src/.env.example` → `.env.example`
 
 ### Updated
-- `package.json`: Changed name from "src" to "bingoal"
+
+- `package.json`: Changed name from "src" to "bingoooal"
 - `astro.config.mjs`: Updated import from `@astrojs/vercel/serverless` to `@astrojs/vercel`
 - `DEPLOYMENT.md`: Removed references to `src` as root directory
 
 ### Removed
+
 - `vercel.json`: No longer needed with standard structure
 - `amplify.yml`: Switched from AWS Amplify to Vercel
 - `src-old/`: Cleaned up old directory structure
 
 ### Created
+
 - `.gitignore`: Added to prevent committing build artifacts and env files
 
 ## Deployment
@@ -82,6 +88,7 @@ See `DEPLOYMENT.md` for detailed instructions.
 ## Testing
 
 Build tested successfully:
+
 ```bash
 npm run build
 # ✓ Build completed successfully
@@ -93,4 +100,3 @@ npm run build
 2. Push to GitHub
 3. Deploy to Vercel following DEPLOYMENT.md
 4. Update Supabase OAuth redirect URLs with your Vercel domain
-
