@@ -160,6 +160,8 @@
 - [x] Form element is pre-populated (placeholder) with a random sample goal from data/example-goals.json - if user doesn't change text, placeholder text is saved.
 - [x] Inspire me button exists if the form field is empty.
 - [x] Create goal has the option be entered as a "free space" in which the UI changes to reflect that it is a free space.
+- [x] If the goal is marked as a free space, the text for the goal should be "Free Space"
+- [ ] If the goal is marked as a free space, the text for the goal should be "Free Space"
 
 ### Story: Edit Goal
 

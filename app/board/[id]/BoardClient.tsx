@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Board, Goal } from "@/lib/types";
 import styles from "./board.module.css";
@@ -427,7 +427,9 @@ export default function BoardClient({
               >
                 {goal ? (
                   <div className={styles.goalContent}>
-                    <span className={styles.goalText}>{goal.text}</span>
+                    <span className={styles.goalText}>
+                      {goal.is_free_space ? "Free Space" : goal.text}
+                    </span>
                     {goal.completed && (
                       <span className={styles.checkmark}>✓</span>
                     )}

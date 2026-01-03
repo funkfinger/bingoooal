@@ -198,6 +198,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added "← Back to Dashboard" button at top of board view
   - Existing "← Back to Dashboard" button remains at bottom
   - Users now have clear navigation options at both top and bottom of page
+- Improved free space display:
+  - Goals marked as free space now display "Free Space" as the text
+  - Maintains distinctive gold gradient styling
+  - Clearer visual indication of free space goals
 
 ### Changed
 
@@ -255,6 +259,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added dark gray text color (`#1f2937`) to `.filled` class
   - Ensures goal text is clearly visible against white background on uncompleted goals
   - Maintains proper color contrast for accessibility
+- Fixed checkbox label visibility in Add/Edit Goal modal:
+  - Added `.checkboxGroup` CSS class with proper styling
+  - Set label text color to `#333` (dark gray) to ensure visibility against white modal background
+  - Fixed issue where "Mark as free space (auto-completed)" text was white-on-white and invisible
+  - Text is now visible whether selected/highlighted or not
 
 ### Security
 
