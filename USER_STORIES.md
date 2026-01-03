@@ -66,7 +66,7 @@
 - [x] User can set a title/name for the board
 - [x] User can specify the year for the board
 - [x] Board is saved and associated with the user
-- [ ] Optional center square is free space and already completed
+- [x] Optional center square is free space and already completed
 
 ### Story: View Bingo Boards
 
@@ -117,7 +117,7 @@
 - [x] User cannot add, edit, or delete goals on locked boards
 - [x] The only function a User can do to a locked board is delete it
 - [x] A user can not unlock a board once it is locked. The functionality can stay in the code, but the user interface should not have an unlock button.
-- [ ] A user should only be able to lock the board once all 25 goils have been added.
+- [x] A user should only be able to lock the board once all 25 goals have been added.
 
 ## Goal Management
 

@@ -117,6 +117,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Added info message in edit modal when board is locked
   - Added confirmation dialog before locking
   - **Lock is permanent** - once locked, board cannot be unlocked via UI
+  - Lock button disabled until all 25 goals are added
+  - Server-side validation prevents locking incomplete boards
+- Implemented center square free space:
+  - Position 12 (center square) automatically created as "FREE SPACE"
+  - Free space is pre-completed and cannot be edited or deleted
+  - Styled with distinctive gold gradient background
+  - Clicking free space has no effect
+  - API endpoints prevent modification of free space goal
 
 ### Changed
 
