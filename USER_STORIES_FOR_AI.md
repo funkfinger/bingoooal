@@ -92,6 +92,17 @@
 - [x] Each board shows its title and year
 - [x] User can click to view board details
 
+### Story: Return to Dashboard from Board View
+
+- [x] **As a** user
+      **I want to** return to the dashboard from the board view
+      **So that** I can see all my boards at once
+
+**Acceptance Criteria:**
+
+- [x] User can click a back button to return to dashboard
+- [x] User is taken to the dashboard when clicking board title
+
 ### Story: Edit Bingo Board
 
 - [x] **As a** user

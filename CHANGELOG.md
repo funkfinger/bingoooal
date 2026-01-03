@@ -194,6 +194,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Once locked, only completion toggling allowed (no add/edit/delete)
   - All goal operations respect board lock status
   - Comprehensive error handling and loading states
+- Enhanced board navigation:
+  - Made board title clickable to return to dashboard
+  - Added hover effect on board title with color change
+  - Added tooltip indicating title is clickable
+  - Complements existing "Back to Dashboard" button
 
 ### Changed
 

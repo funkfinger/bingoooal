@@ -61,10 +61,27 @@
   align-items: center;
 }
 
-.boardHeader h1 {
+.boardTitleSection {
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 8px;
+  margin: -8px;
+  border-radius: 8px;
+}
+
+.boardTitleSection:hover {
+  background: rgba(102, 126, 234, 0.05);
+}
+
+.boardTitleSection:hover .clickableTitle {
+  color: #667eea;
+}
+
+.clickableTitle {
   color: #333;
   margin: 0 0 8px 0;
   font-size: 28px;
+  transition: color 0.2s;
 }
 
 .year {

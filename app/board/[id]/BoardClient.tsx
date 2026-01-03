@@ -358,8 +358,12 @@ export default function BoardClient({
 
       <div className={styles.container}>
         <div className={styles.boardHeader}>
-          <div>
-            <h1>{currentBoard.title}</h1>
+          <div
+            className={styles.boardTitleSection}
+            onClick={() => router.push("/dashboard")}
+            title="Click to return to dashboard"
+          >
+            <h1 className={styles.clickableTitle}>{currentBoard.title}</h1>
             <p className={styles.year}>{currentBoard.year}</p>
           </div>
           <div className={styles.headerActions}>
