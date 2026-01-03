@@ -8,5 +8,20 @@
     "Roboto",
     "Segoe",
     "Supabase"
-  ]
+  ],
+  "git.ignoreLimitWarning": true,
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/.vercel": true,
+    "**/.astro": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/.vercel": true,
+    "**/.astro": true
+  }
 }
