@@ -160,14 +160,6 @@ boardGoals.forEach(goal => {
         background: #d97706;
       }
 
-      .lock-btn.locked {
-        background: #10b981;
-      }
-
-      .lock-btn.locked:hover {
-        background: #059669;
-      }
-
       .locked-indicator {
         display: inline-flex;
         align-items: center;
@@ -573,9 +565,11 @@ boardGoals.forEach(goal => {
             )}
           </div>
           <button id="edit-board-btn" class="edit-board-btn">✏️ Edit</button>
-          <button id="lock-btn" class={`lock-btn ${board.locked ? 'locked' : ''}`}>
-            {board.locked ? '🔓 Unlock' : '🔒 Lock'}
-          </button>
+          {!board.locked && (
+            <button id="lock-btn" class="lock-btn">
+              🔒 Lock
+            </button>
+          )}
         </div>
       </div>
       <div class="user-info">
@@ -912,12 +906,15 @@ boardGoals.forEach(goal => {
         }
       });
 
-      // Lock/Unlock button functionality
+      // Lock button functionality (one-way lock - cannot unlock once locked)
       lockBtn?.addEventListener('click', async () => {
-        const newLockedState = !isLocked;
+        // Confirm before locking
+        if (!confirm('Are you sure you want to lock this board? Once locked, you can only mark goals as complete. This action cannot be undone.')) {
+          return;
+        }
 
         lockBtn.disabled = true;
-        lockBtn.textContent = newLockedState ? '🔒 Locking...' : '🔓 Unlocking...';
+        lockBtn.textContent = '🔒 Locking...';
 
         try {
           const response = await fetch('/api/boards/toggle-lock', {
@@ -925,7 +922,7 @@ boardGoals.forEach(goal => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               board_id: boardId,
-              locked: newLockedState,
+              locked: true,
             }),
           });
 
@@ -935,15 +932,15 @@ boardGoals.forEach(goal => {
             // Reload page to update UI
             window.location.reload();
           } else {
-            alert(result.error || 'Failed to update lock status');
+            alert(result.error || 'Failed to lock board');
             lockBtn.disabled = false;
-            lockBtn.textContent = isLocked ? '🔓 Unlock' : '🔒 Lock';
+            lockBtn.textContent = '🔒 Lock';
           }
         } catch (error) {
-          console.error('Error toggling lock:', error);
+          console.error('Error locking board:', error);
           alert('An unexpected error occurred');
           lockBtn.disabled = false;
-          lockBtn.textContent = isLocked ? '🔓 Unlock' : '🔒 Lock';
+          lockBtn.textContent = '🔒 Lock';
         }
       });
 
