@@ -192,6 +192,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+- Removed Astro implementation after successful Next.js migration:
+  - Deleted `astro-src/` directory containing original Astro source code
+  - Removed `tsconfig.astro.json` TypeScript configuration
+  - Removed Astro-specific npm scripts (`dev:astro`, `build:astro`, `preview:astro`)
+  - Cleaned up TypeScript exclude array to remove `astro-src` reference
+
 ### Fixed
 
 - Fixed Vercel deployment issues:
@@ -210,6 +216,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Changed from client-side only logout to server-side logout with cookie cleanup
   - Added manual deletion of all Supabase cookies to ensure complete session termination
   - Resolved "Auth session missing" error by gracefully handling logout errors
+- Fixed 404 error after creating new bingo board:
+  - Created missing `/board/[id]` dynamic route that was referenced but not implemented
+  - Implemented `app/board/[id]/page.tsx` server component for board data fetching
+  - Created `app/board/[id]/BoardClient.tsx` client component with interactive 5x5 bingo grid
+  - Added `app/board/[id]/board.module.css` with responsive styling and color-coded cells
+  - Board creation now successfully navigates to board detail page instead of 404
+  - Includes progress bar, visual distinction for empty/filled/completed/free space cells
+  - Added back navigation to dashboard
 
 ### Security
 
