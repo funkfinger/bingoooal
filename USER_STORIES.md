@@ -116,7 +116,7 @@
 - [x] Locked boards show a visual indicator
 - [x] User cannot add, edit, or delete goals on locked boards
 - [x] The only function a User can do to a locked board is delete it
-- [ ] A user can not unlock a board once it is locked. The functionality can stay in the code, but the user interface should not have an unlock button.
+- [x] A user can not unlock a board once it is locked. The functionality can stay in the code, but the user interface should not have an unlock button.
 
 ## Goal Management
 
