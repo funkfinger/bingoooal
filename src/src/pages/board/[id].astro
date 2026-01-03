@@ -633,7 +633,7 @@ boardGoals.forEach(goal => {
       <div class="bingo-grid">
         {Array.from({ length: 25 }, (_, i) => {
           const goal = goalsMap.get(i);
-          const isFreeSpace = i === 12;
+          const isFreeSpace = goal?.is_free_space || false;
           return (
             <div
               class={`bingo-cell ${goal ? (goal.completed ? 'completed' : '') : 'empty'} ${isFreeSpace ? 'free-space' : ''}`}
@@ -678,6 +678,16 @@ boardGoals.forEach(goal => {
               </button>
             </div>
           </div>
+          <div class="form-group checkbox-group">
+            <label>
+              <input
+                type="checkbox"
+                id="goal-is-free-space"
+                name="is_free_space"
+              />
+              <span>Mark as free space (auto-completed, cannot be edited/deleted)</span>
+            </label>
+          </div>
           <div id="add-form-error" class="error-message" style="display: none;"></div>
           <div class="form-actions">
             <button type="button" id="cancel-add-btn" class="btn btn-secondary">Cancel</button>
@@ -711,6 +721,16 @@ boardGoals.forEach(goal => {
           <div class="checkbox-group">
             <input type="checkbox" id="goal-completed" name="completed" />
             <label for="goal-completed">Mark as completed</label>
+          </div>
+          <div class="checkbox-group">
+            <label>
+              <input
+                type="checkbox"
+                id="edit-goal-is-free-space"
+                name="is_free_space"
+              />
+              <span>Mark as free space (auto-completed, cannot be edited/deleted)</span>
+            </label>
           </div>
           <div id="edit-form-error" class="error-message" style="display: none;"></div>
           <div class="form-actions">
@@ -847,10 +867,15 @@ boardGoals.forEach(goal => {
       }
 
       // Open edit modal
-      function openEditModal(goalId, text, completed) {
+      function openEditModal(goalId, text, completed, isFreeSpace = false) {
         currentGoalId = goalId;
         editGoalTextInput.value = text;
         goalCompletedCheckbox.checked = completed;
+
+        const editFreeSpaceCheckbox = document.getElementById('edit-goal-is-free-space');
+        if (editFreeSpaceCheckbox) {
+          editFreeSpaceCheckbox.checked = isFreeSpace;
+        }
 
         // If board is locked, disable text editing and delete button
         if (isLocked) {
@@ -994,7 +1019,9 @@ boardGoals.forEach(goal => {
             // Get goal data from cell
             const goalText = cell.querySelector('.goal-text')?.textContent || '';
             const isCompleted = cell.classList.contains('completed');
-            openEditModal(goalId, goalText, isCompleted);
+            const isFreeSpaceAttr = cell.getAttribute('data-free-space');
+            const isFreeSpace = isFreeSpaceAttr === 'true';
+            openEditModal(goalId, goalText, isCompleted, isFreeSpace);
           } else {
             // Only allow adding goals if board is unlocked
             if (isLocked) {
@@ -1016,6 +1043,9 @@ boardGoals.forEach(goal => {
           return;
         }
 
+        const isFreeSpaceCheckbox = document.getElementById('goal-is-free-space');
+        const isFreeSpace = isFreeSpaceCheckbox?.checked || false;
+
         submitAddBtn.disabled = true;
         submitAddBtn.textContent = 'Adding...';
 
@@ -1027,6 +1057,7 @@ boardGoals.forEach(goal => {
               board_id: boardId,
               position: currentPosition,
               text: text,
+              is_free_space: isFreeSpace,
             }),
           });
 
@@ -1053,6 +1084,8 @@ boardGoals.forEach(goal => {
 
         const text = editGoalTextInput.value.trim();
         const completed = goalCompletedCheckbox.checked;
+        const isFreeSpaceCheckbox = document.getElementById('edit-goal-is-free-space');
+        const isFreeSpace = isFreeSpaceCheckbox?.checked || false;
 
         // If locked, only allow completion status changes
         if (isLocked) {
@@ -1080,6 +1113,7 @@ boardGoals.forEach(goal => {
               goal_id: currentGoalId,
               text: text,
               completed: completed,
+              is_free_space: isFreeSpace,
             }),
           });
 

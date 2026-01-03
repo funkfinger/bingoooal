@@ -16,6 +16,7 @@ export interface Goal {
   text: string;
   completed: boolean;
   completed_at: string | null;
+  is_free_space: boolean; // Free space goals are auto-completed and cannot be edited/deleted
   created_at: string;
   updated_at: string;
 }
@@ -24,6 +25,7 @@ export interface Goal {
 export interface CreateBoardRequest {
   title: string;
   year: number;
+  include_free_space?: boolean;
 }
 
 export interface CreateBoardResponse {
@@ -36,10 +38,11 @@ export interface CreateGoalRequest {
   board_id: string;
   position: number;
   text: string;
+  is_free_space?: boolean;
 }
 
 export interface UpdateGoalRequest {
   text?: string;
   completed?: boolean;
+  is_free_space?: boolean;
 }
-

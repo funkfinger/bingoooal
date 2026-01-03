@@ -31,7 +31,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     // Verify the goal belongs to the user's board
     const { data: goal, error: goalError } = await supabase
       .from("goals")
-      .select("board_id, position, boards!inner(user_id)")
+      .select("board_id, is_free_space, boards!inner(user_id)")
       .eq("id", goal_id)
       .single();
 
@@ -51,8 +51,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       );
     }
 
-    // Prevent deleting the free space (position 12)
-    if (goalData.position === 12) {
+    // Prevent deleting free space goals
+    if (goalData.is_free_space) {
       return new Response(
         JSON.stringify({
           success: false,

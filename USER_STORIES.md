@@ -15,6 +15,18 @@
 - [x] Development server runs without errors
 - [x] Basic routing is implemented
 
+### Story: Deployment
+
+- [ ] **As a** developer
+      **I want to** deploy the application to AWS Amplify
+      **So that** I can share it with others
+
+**Acceptance Criteria:**
+
+- [ ] GitHub Pages is configured
+- [ ] Application is deployed and accessible
+- [ ] CI/CD pipeline is set up for automatic deployments
+
 ## User Management
 
 ### Story: User Registration
@@ -136,6 +148,7 @@
 - [x] Sample goals are populated for inspiration - data/example-goals.json
 - [ ] Form element is pre-populated with a random sample goal from data/example-goals.json
 - [ ] Inspire me button exists if the form field is empty.
+- [ ] Create goal has the option be entered as a "free space" in which the UI changes to reflect that it is a free space.
 
 ### Story: Edit Goal
 

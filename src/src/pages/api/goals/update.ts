@@ -21,7 +21,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
     // Parse request body
     const body: UpdateGoalRequest & { goal_id: string } = await request.json();
-    const { goal_id, text, completed } = body;
+    const { goal_id, text, completed, is_free_space } = body;
 
     if (!goal_id) {
       return new Response(
@@ -33,7 +33,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     // Verify the goal belongs to the user's board
     const { data: goal, error: goalError } = await supabase
       .from("goals")
-      .select("board_id, position, boards!inner(user_id)")
+      .select("board_id, is_free_space, boards!inner(user_id)")
       .eq("id", goal_id)
       .single();
 
@@ -53,12 +53,17 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       );
     }
 
-    // Prevent editing the free space (position 12) text
-    if (goalData.position === 12 && text !== undefined) {
+    // Prevent editing free space goal text (unless unchecking is_free_space)
+    if (
+      goalData.is_free_space &&
+      text !== undefined &&
+      is_free_space !== false
+    ) {
       return new Response(
         JSON.stringify({
           success: false,
-          error: "Cannot edit free space goal",
+          error:
+            "Cannot edit free space goal text. Uncheck 'Mark as free space' first.",
         }),
         { status: 400, headers: { "Content-Type": "application/json" } }
       );
@@ -85,6 +90,15 @@ export const POST: APIRoute = async ({ request, cookies }) => {
     if (completed !== undefined) {
       updates.completed = completed;
       updates.completed_at = completed ? new Date().toISOString() : null;
+    }
+
+    if (is_free_space !== undefined) {
+      updates.is_free_space = is_free_space;
+      // If marking as free space, auto-complete it
+      if (is_free_space) {
+        updates.completed = true;
+        updates.completed_at = new Date().toISOString();
+      }
     }
 
     // Update the goal

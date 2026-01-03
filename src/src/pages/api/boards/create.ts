@@ -26,7 +26,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
     // Parse request body
     const body: CreateBoardRequest = await request.json();
-    const { title, year } = body;
+    const { title, year, include_free_space = false } = body;
 
     // Validate input
     if (!title || !title.trim()) {
@@ -71,19 +71,22 @@ export const POST: APIRoute = async ({ request, cookies }) => {
       );
     }
 
-    // Automatically create the center square (position 12) as a free space
-    const { error: freeSpaceError } = await supabase.from("goals").insert({
-      board_id: board.id,
-      position: 12,
-      text: "FREE SPACE",
-      completed: true,
-      completed_at: new Date().toISOString(),
-    });
+    // Optionally create the center square (position 12) as a free space
+    if (include_free_space) {
+      const { error: freeSpaceError } = await supabase.from("goals").insert({
+        board_id: board.id,
+        position: 12,
+        text: "FREE SPACE",
+        completed: true,
+        completed_at: new Date().toISOString(),
+        is_free_space: true,
+      });
 
-    if (freeSpaceError) {
-      console.error("Error creating free space:", freeSpaceError);
-      // Don't fail the board creation if free space fails
-      // The user can still use the board
+      if (freeSpaceError) {
+        console.error("Error creating free space:", freeSpaceError);
+        // Don't fail the board creation if free space fails
+        // The user can still use the board
+      }
     }
 
     return new Response(
