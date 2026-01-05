@@ -8,6 +8,10 @@ export default auth((req) => {
     req.nextUrl.pathname.startsWith("/dashboard") ||
     req.nextUrl.pathname.startsWith("/board");
 
+  // Check if this is a shared board access (has ?share= parameter)
+  const hasShareToken = req.nextUrl.searchParams.has("share");
+  const isBoardRoute = req.nextUrl.pathname.startsWith("/board");
+
   if (isAuthPage) {
     if (isAuth) {
       return NextResponse.redirect(new URL("/dashboard", req.url));
@@ -15,7 +19,13 @@ export default auth((req) => {
     return NextResponse.next();
   }
 
+  // Allow unauthenticated access to boards with share token
   if (!isAuth && isProtectedRoute) {
+    if (isBoardRoute && hasShareToken) {
+      // Let the board page handle share token validation
+      return NextResponse.next();
+    }
+
     let from = req.nextUrl.pathname;
     if (req.nextUrl.search) {
       from += req.nextUrl.search;

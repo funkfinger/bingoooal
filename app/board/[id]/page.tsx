@@ -8,17 +8,21 @@ interface BoardPageProps {
   params: Promise<{
     id: string;
   }>;
+  searchParams: Promise<{
+    share?: string;
+  }>;
 }
 
-export default async function BoardPage({ params }: BoardPageProps) {
+export default async function BoardPage({
+  params,
+  searchParams,
+}: BoardPageProps) {
   // Await params for Next.js 16 compatibility
   const { id } = await params;
+  const searchParamsResolved = await searchParams;
+  const share = searchParamsResolved?.share;
 
   const session = await auth();
-
-  if (!session?.user) {
-    redirect("/login");
-  }
 
   // Fetch the board
   const { data: board, error: boardError } = await supabase
@@ -31,10 +35,23 @@ export default async function BoardPage({ params }: BoardPageProps) {
     redirect("/dashboard");
   }
 
-  // Verify the board belongs to the user
   const boardData = board as Board;
-  if (boardData.user_id !== session.user.id) {
-    redirect("/dashboard");
+
+  // Check if this is a shared board access
+  const isSharedAccess = Boolean(
+    share && share === boardData.share_token && boardData.is_public
+  );
+
+  // If not shared access, require authentication and ownership
+  if (!isSharedAccess) {
+    if (!session?.user) {
+      redirect("/login");
+    }
+
+    // Verify the board belongs to the user
+    if (boardData.user_id !== session.user.id) {
+      redirect("/dashboard");
+    }
   }
 
   // Fetch goals for this board
@@ -52,9 +69,10 @@ export default async function BoardPage({ params }: BoardPageProps) {
 
   return (
     <BoardClient
-      user={session.user}
+      user={session?.user || null}
       board={boardData}
       initialGoals={boardGoals}
+      isSharedView={isSharedAccess}
     />
   );
 }

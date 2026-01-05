@@ -9,6 +9,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Board Sharing Feature**:
+
+  - Users can now share their boards with others via a public link
+  - Added "🔗 Share" button to board header for board owners
+  - Share modal with toggle to enable/disable public sharing
+  - Each board gets a unique, hard-to-guess share token (UUID)
+  - Share links work without authentication when sharing is enabled
+  - Shared boards display in read-only mode with visual indicators:
+    - Blue banner: "👁️ You are viewing a shared board in read-only mode"
+    - "Read-Only" badge in header
+    - "Viewing Shared Board" in user info section
+    - Edit, delete, and lock buttons hidden for viewers
+  - Copy-to-clipboard functionality for share links
+  - Database migration adds `share_token` and `is_public` fields to boards table
+  - Row Level Security (RLS) policies allow public read access to shared boards
+  - API endpoint `/api/boards/toggle-share` to manage sharing status
+  - Middleware updated to allow unauthenticated access to boards with share tokens
+
 - **Toggle Free Space Checkbox**:
 
   - Users can now toggle the free space checkbox when creating a new goal

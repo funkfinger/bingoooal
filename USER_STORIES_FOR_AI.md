@@ -6,6 +6,53 @@
 
 ## User Management
 
+### Story: Existing user can share a board via link
+
+- [ ] **As a** logged-in user  
+       **I want to** share a board with others  
+       **So that** I share my goal progress
+
+**Acceptance Criteria:**
+
+- [ ] Existing User can share a board with others - non-users can view the board
+
+### Story: Existing user can invite a new user to the platform
+
+- [ ] **As a** logged-in user  
+       **I want to** invite a new user to the platform  
+       **So that** I can share my board with others
+
+**Acceptance Criteria:**
+
+- [ ] Existing User can invite an email of another user to the platform
+
+# Group Management
+
+### Story: User Can Create Group
+
+- [ ] **As a** logged-in user  
+       **I want to** create a group that other users can join
+      **So that** I can share or collaborate on goals with others
+
+**Acceptance Criteria:**
+
+- [ ] User can create a group
+- [ ] User can invite other users to join the group
+- [ ] User can add goal boards to the group
+- [ ] All personal boards are in a "Personal" group by default
+
+### Story: View Goal Details
+
+- [ ] **As a** user  
+       **I want to** view full details of a goal  
+       **So that** I can see the complete description if it's long
+
+**Acceptance Criteria:**
+
+- [ ] User can click/hover to see full goal text
+- [ ] Modal or tooltip displays complete information
+- [ ] Easy to close and return to board view
+
 ## Bingo Board Management
 
 ## Goal Management

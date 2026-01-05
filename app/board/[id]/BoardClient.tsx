@@ -16,15 +16,17 @@ interface BoardClientProps {
     name?: string | null;
     email?: string | null;
     image?: string | null;
-  };
+  } | null;
   board: Board;
   initialGoals: Goal[];
+  isSharedView?: boolean;
 }
 
 export default function BoardClient({
   user,
   board,
   initialGoals,
+  isSharedView = false,
 }: BoardClientProps) {
   const router = useRouter();
   const [goals, setGoals] = useState<Goal[]>(initialGoals);
@@ -55,6 +57,11 @@ export default function BoardClient({
     is_free_space: false,
   });
 
+  // Share modal
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [isTogglingShare, setIsTogglingShare] = useState(false);
+  const [shareUrl, setShareUrl] = useState<string>("");
+
   // Create a map of position to goal for easy lookup
   const goalMap = new Map<number, Goal>();
   goals.forEach((goal) => {
@@ -67,6 +74,15 @@ export default function BoardClient({
   const progress = Math.round((completedCount / totalGoals) * 100);
 
   const handleCellClick = (position: number) => {
+    // In shared view, only show details modal
+    if (isSharedView) {
+      const goal = goalMap.get(position);
+      if (goal && !goal.is_free_space) {
+        openGoalDetailsModal(goal);
+      }
+      return;
+    }
+
     const goal = goalMap.get(position);
     if (goal) {
       // If board is locked, show details modal (unless it's a free space - do nothing)
@@ -354,6 +370,54 @@ export default function BoardClient({
     setShowEditModal(true);
   };
 
+  const handleToggleShare = async () => {
+    setIsTogglingShare(true);
+
+    try {
+      const response = await fetch("/api/boards/toggle-share", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          board_id: currentBoard.id,
+          is_public: !currentBoard.is_public,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setCurrentBoard({ ...currentBoard, is_public: data.is_public });
+        if (data.share_url) {
+          setShareUrl(data.share_url);
+        }
+        router.refresh();
+      } else {
+        alert(data.error || "Failed to toggle share status");
+      }
+    } catch (error) {
+      console.error("Error toggling share:", error);
+      alert("An error occurred while toggling share status");
+    } finally {
+      setIsTogglingShare(false);
+    }
+  };
+
+  const openShareModal = () => {
+    // Generate share URL if board is already public
+    if (currentBoard.is_public && currentBoard.share_token) {
+      const baseUrl = window.location.origin;
+      setShareUrl(
+        `${baseUrl}/board/${currentBoard.id}?share=${currentBoard.share_token}`
+      );
+    }
+    setShowShareModal(true);
+  };
+
+  const copyShareLink = () => {
+    navigator.clipboard.writeText(shareUrl);
+    alert("Share link copied to clipboard!");
+  };
+
   return (
     <div className={styles.page}>
       <header className={styles.header}>
@@ -362,26 +426,38 @@ export default function BoardClient({
           <span>Bingoooal</span>
         </div>
         <div className={styles.userInfo}>
-          {user.image && (
+          {user?.image && (
             <img
               src={user.image}
               alt={user.name || ""}
               className={styles.userAvatar}
             />
           )}
-          <span className={styles.userName}>{user.name || user.email}</span>
+          <span className={styles.userName}>
+            {isSharedView
+              ? "Viewing Shared Board"
+              : user?.name || user?.email || "User"}
+          </span>
         </div>
       </header>
 
       <div className={styles.container}>
-        <div className={styles.backButtonTop}>
-          <button
-            onClick={() => router.push("/dashboard")}
-            className={styles.backBtn}
-          >
-            ← Back to Dashboard
-          </button>
-        </div>
+        {!isSharedView && (
+          <div className={styles.backButtonTop}>
+            <button
+              onClick={() => router.push("/dashboard")}
+              className={styles.backBtn}
+            >
+              ← Back to Dashboard
+            </button>
+          </div>
+        )}
+
+        {isSharedView && (
+          <div className={styles.sharedBanner}>
+            👁️ You are viewing a shared board in read-only mode
+          </div>
+        )}
 
         <div className={styles.boardHeader}>
           <div>
@@ -389,31 +465,40 @@ export default function BoardClient({
             <p className={styles.year}>{currentBoard.year}</p>
           </div>
           <div className={styles.headerActions}>
-            {currentBoard.locked ? (
-              <span className={styles.lockedBadge}>🔒 Locked</span>
+            {isSharedView ? (
+              <span className={styles.sharedBadge}>👁️ Read-Only</span>
             ) : (
-              <button
-                onClick={() => setShowLockConfirm(true)}
-                className={styles.lockBtn}
-                disabled={goals.length < 25}
-                title={
-                  goals.length < 25
-                    ? `Add ${25 - goals.length} more goal(s) to lock`
-                    : "Lock board to start tracking progress"
-                }
-              >
-                🔒 Lock Board
-              </button>
+              <>
+                {currentBoard.locked ? (
+                  <span className={styles.lockedBadge}>🔒 Locked</span>
+                ) : (
+                  <button
+                    onClick={() => setShowLockConfirm(true)}
+                    className={styles.lockBtn}
+                    disabled={goals.length < 25}
+                    title={
+                      goals.length < 25
+                        ? `Add ${25 - goals.length} more goal(s) to lock`
+                        : "Lock board to start tracking progress"
+                    }
+                  >
+                    🔒 Lock Board
+                  </button>
+                )}
+                <button onClick={openShareModal} className={styles.shareBtn}>
+                  🔗 Share
+                </button>
+                <button onClick={openEditModal} className={styles.editBtn}>
+                  ✏️ Edit
+                </button>
+                <button
+                  onClick={() => setShowDeleteConfirm(true)}
+                  className={styles.deleteBtn}
+                >
+                  🗑️ Delete
+                </button>
+              </>
             )}
-            <button onClick={openEditModal} className={styles.editBtn}>
-              ✏️ Edit
-            </button>
-            <button
-              onClick={() => setShowDeleteConfirm(true)}
-              className={styles.deleteBtn}
-            >
-              🗑️ Delete
-            </button>
           </div>
         </div>
 
@@ -694,6 +779,60 @@ export default function BoardClient({
                 {isEditing ? "Saving..." : "Save Changes"}
               </button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Share Modal */}
+      {showShareModal && (
+        <div className={styles.modal} onClick={() => setShowShareModal(false)}>
+          <div
+            className={styles.modalContent}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className={styles.modalHeader}>
+              <h2>Share Board</h2>
+              <button
+                onClick={() => setShowShareModal(false)}
+                className={styles.closeBtn}
+              >
+                ×
+              </button>
+            </div>
+            <div className={styles.shareContent}>
+              <p className={styles.shareDescription}>
+                {currentBoard.is_public
+                  ? "Your board is currently public. Anyone with the link can view it."
+                  : "Enable sharing to generate a link that others can use to view your board."}
+              </p>
+              <div className={styles.shareToggle}>
+                <label className={styles.toggleLabel}>
+                  <input
+                    type="checkbox"
+                    checked={currentBoard.is_public}
+                    onChange={handleToggleShare}
+                    disabled={isTogglingShare}
+                  />
+                  <span>Enable public sharing</span>
+                </label>
+              </div>
+              {currentBoard.is_public && shareUrl && (
+                <div className={styles.shareLinkSection}>
+                  <label>Share Link:</label>
+                  <div className={styles.shareLinkContainer}>
+                    <input
+                      type="text"
+                      value={shareUrl}
+                      readOnly
+                      className={styles.shareLinkInput}
+                    />
+                    <button onClick={copyShareLink} className={styles.copyBtn}>
+                      📋 Copy
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
