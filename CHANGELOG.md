@@ -16,6 +16,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Checking the free space checkbox automatically updates the goal text to "Free Space"
   - Unchecking the free space checkbox allows users to edit the goal text freely
 
+### Changed
+
+- **Disabled Rotation Effects by Default**:
+
+  - Removed slight rotation transforms from all UI elements (cells, buttons, modals)
+  - Elements now display perfectly straight by default for a cleaner appearance
+  - Rotation styles are preserved as comments in CSS for easy re-enabling if desired
+  - Affected elements: board cells, lock button, edit button, delete button, back button, inspire button, submit button, cancel button, and confirm delete button
+  - Hover states updated to only use translateY transforms without rotation resets
+
 - **Comprehensive Mobile Responsiveness** (375px+ Support):
   - Implemented 5-tier responsive breakpoint system:
     - 768px (Tablet/large mobile)
