@@ -9,6 +9,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Group Management and Friends System**:
+
+  - Implemented automatic group creation for all users:
+    - Each user gets one personal group created automatically on registration
+    - Existing users receive groups via database migration
+    - User is automatically added as the owner of their group
+  - Enhanced invitation system to support group membership:
+    - New users signing up via invite link are automatically added to inviter's group
+    - Existing users clicking invite links are added to inviter's group upon login
+    - Prevents duplicate group memberships
+    - Handles expired and already-used invitations
+  - Created comprehensive group management UI:
+    - New `/friends` page to view and manage group members
+    - "👥 Friends" navigation button in dashboard header
+    - Two main sections:
+      - "My Friends" - View and manage members of your group
+      - "Groups I'm In" - View groups you've joined through invites
+  - Implemented group member management:
+    - View all members with avatars, names, and join dates
+    - Remove members from your group with confirmation dialog
+    - Owner is hidden from the friends list (cannot see or remove themselves)
+    - Member count excludes the owner
+  - Implemented group membership management:
+    - View all groups you're a member of with owner information
+    - Leave groups you've joined with confirmation dialog
+    - Cannot leave your own group (where you're the owner)
+  - Created API endpoints for group operations:
+    - `GET /api/groups/members` - Fetch members of user's group
+    - `POST /api/groups/remove-member` - Remove a member from group
+    - `GET /api/groups/my-groups` - Get groups user is a member of
+    - `POST /api/groups/leave` - Leave a group
+  - Database schema additions:
+    - `groups` table - One personal group per user
+    - `group_members` table - Tracks group membership with roles
+    - `board_shares` table - Ready for future board sharing features
+    - Proper indexes and foreign key constraints
+    - Row Level Security (RLS) policies for service role access
+  - UI/UX enhancements:
+    - Responsive design for mobile and desktop
+    - Loading states during data fetching
+    - Empty states with helpful guidance
+    - Confirmation dialogs for destructive actions
+    - Hand-drawn aesthetic matching app design
+    - Smooth animations and hover effects
+
 - **Board Sharing Feature**:
 
   - Users can now share their boards with others via a public link

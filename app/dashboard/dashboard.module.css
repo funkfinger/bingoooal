@@ -637,3 +637,131 @@
     font-size: 14px;
   }
 }
+
+/* Friends Button */
+.friendsBtn {
+  padding: 8px 16px;
+  background: #8b5cf6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 5px 7px 6px 8px / 7px 5px 8px 6px;
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.15);
+  transform: rotate(-0.3deg);
+}
+
+.friendsBtn:hover {
+  background: #7c3aed;
+  transform: rotate(0deg) translateY(-1px);
+  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);
+}
+
+/* Invite Button */
+.inviteBtn {
+  padding: 8px 16px;
+  background: #10b981;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 5px 7px 6px 8px / 7px 5px 8px 6px;
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.15);
+  transform: rotate(-0.3deg);
+}
+
+.inviteBtn:hover {
+  background: #059669;
+  transform: rotate(0deg) translateY(-1px);
+  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);
+}
+
+/* Invite Modal Content */
+.inviteContent {
+  padding: 20px 0;
+}
+
+.inviteDescription {
+  color: #666;
+  font-size: 16px;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.generateInviteBtn {
+  width: 100%;
+  padding: 12px 24px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 7px 9px 8px 10px / 9px 7px 10px 8px;
+  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.15);
+}
+
+.generateInviteBtn:hover:not(:disabled) {
+  background: #5568d3;
+  transform: translateY(-2px);
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
+}
+
+.generateInviteBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.inviteLinkContainer {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.inviteLinkInput {
+  flex: 1;
+  padding: 12px;
+  border: 2px solid #e1e8ed;
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: monospace;
+  background: #f5f7fa;
+  color: #333;
+  border-radius: 7px 9px 8px 10px / 9px 7px 10px 8px;
+}
+
+.copyBtn {
+  padding: 12px 20px;
+  background: #667eea;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+  border-radius: 7px 9px 8px 10px / 9px 7px 10px 8px;
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.15);
+}
+
+.copyBtn:hover {
+  background: #5568d3;
+  transform: translateY(-1px);
+  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.2);
+}
+
+.inviteNote {
+  color: #999;
+  font-size: 14px;
+  font-style: italic;
+  text-align: center;
+}

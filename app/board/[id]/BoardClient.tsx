@@ -939,7 +939,7 @@ export default function BoardClient({
               )}
             </div>
             <div className={styles.modalActions}>
-              {!selectedGoal.is_free_space && (
+              {!selectedGoal.is_free_space && !isSharedView && (
                 <button
                   onClick={async () => {
                     await handleToggleCompletion(selectedGoal);

@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { supabase } from "./supabase";
+import { cookies } from "next/headers";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [
@@ -28,6 +29,29 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
 
         if (!existingUser) {
+          // Check for invite token in cookies
+          const cookieStore = await cookies();
+          const inviteToken = cookieStore.get("invite_token")?.value;
+          let invitedBy: string | null = null;
+
+          // If there's an invite token, validate it and get the inviter
+          if (inviteToken) {
+            const { data: invitation, error: inviteError } = await supabase
+              .from("invitations")
+              .select("inviter_id, used_by, expires_at")
+              .eq("invite_token", inviteToken)
+              .single();
+
+            if (
+              !inviteError &&
+              invitation &&
+              !invitation.used_by &&
+              new Date(invitation.expires_at) > new Date()
+            ) {
+              invitedBy = invitation.inviter_id;
+            }
+          }
+
           // Create new user in Supabase - let Supabase generate the UUID
           const { data: newUser, error: insertError } = await supabase
             .from("users")
@@ -37,6 +61,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               avatar_url: user.image,
               provider: account?.provider || "google",
               provider_account_id: account?.providerAccountId || user.id,
+              invited_by: invitedBy,
             })
             .select("id")
             .single();
@@ -44,6 +69,56 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           if (insertError) {
             console.error("Error creating user:", insertError);
             return false;
+          }
+
+          // Create a personal group for the new user
+          const { data: newGroup, error: groupError } = await supabase
+            .from("groups")
+            .insert({
+              owner_id: newUser.id,
+            })
+            .select("id")
+            .single();
+
+          if (groupError) {
+            console.error("Error creating group:", groupError);
+            // Don't fail the sign-in if group creation fails
+          } else {
+            // Add the user as the owner of their group
+            await supabase.from("group_members").insert({
+              group_id: newGroup.id,
+              user_id: newUser.id,
+              role: "owner",
+            });
+          }
+
+          // If user was invited, mark the invitation as used and add them to inviter's group
+          if (inviteToken && invitedBy) {
+            await supabase
+              .from("invitations")
+              .update({
+                used_by: newUser.id,
+                used_at: new Date().toISOString(),
+              })
+              .eq("invite_token", inviteToken);
+
+            // Add the new user to the inviter's group
+            const { data: inviterGroup } = await supabase
+              .from("groups")
+              .select("id")
+              .eq("owner_id", invitedBy)
+              .single();
+
+            if (inviterGroup) {
+              await supabase.from("group_members").insert({
+                group_id: inviterGroup.id,
+                user_id: newUser.id,
+                role: "member",
+              });
+            }
+
+            // Clear the invite token cookie
+            cookieStore.delete("invite_token");
           }
 
           // Store the generated UUID for the JWT callback
@@ -60,6 +135,64 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             .eq("email", user.email);
 
           user.id = existingUser.id;
+
+          // Check for invite token - existing user clicking invite link
+          const cookieStore = await cookies();
+          const inviteToken = cookieStore.get("invite_token")?.value;
+
+          if (inviteToken) {
+            const { data: invitation, error: inviteError } = await supabase
+              .from("invitations")
+              .select("inviter_id, used_by, expires_at")
+              .eq("invite_token", inviteToken)
+              .single();
+
+            // If valid invitation and not already used
+            if (
+              !inviteError &&
+              invitation &&
+              !invitation.used_by &&
+              new Date(invitation.expires_at) > new Date()
+            ) {
+              // Get the inviter's group
+              const { data: inviterGroup } = await supabase
+                .from("groups")
+                .select("id")
+                .eq("owner_id", invitation.inviter_id)
+                .single();
+
+              if (inviterGroup) {
+                // Check if user is already in the group
+                const { data: existingMembership } = await supabase
+                  .from("group_members")
+                  .select("id")
+                  .eq("group_id", inviterGroup.id)
+                  .eq("user_id", existingUser.id)
+                  .single();
+
+                // Only add if not already a member
+                if (!existingMembership) {
+                  await supabase.from("group_members").insert({
+                    group_id: inviterGroup.id,
+                    user_id: existingUser.id,
+                    role: "member",
+                  });
+
+                  // Mark invitation as used
+                  await supabase
+                    .from("invitations")
+                    .update({
+                      used_by: existingUser.id,
+                      used_at: new Date().toISOString(),
+                    })
+                    .eq("invite_token", inviteToken);
+                }
+              }
+
+              // Clear the invite token cookie
+              cookieStore.delete("invite_token");
+            }
+          }
         }
 
         return true;

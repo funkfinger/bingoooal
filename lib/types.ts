@@ -84,3 +84,51 @@ export interface ToggleShareResponse {
   share_url?: string;
   error?: string;
 }
+
+// Invitation types
+export interface Invitation {
+  id: string;
+  inviter_id: string;
+  invite_token: string;
+  email: string | null;
+  used_by: string | null;
+  used_at: string | null;
+  expires_at: string;
+  created_at: string;
+}
+
+export interface CreateInvitationRequest {
+  email?: string; // Optional: pre-specify who the invite is for
+}
+
+export interface CreateInvitationResponse {
+  success: boolean;
+  invitation?: Invitation;
+  invite_url?: string;
+  error?: string;
+}
+
+// Group types
+export interface Group {
+  id: string;
+  owner_id: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface GroupMember {
+  id: string;
+  group_id: string;
+  user_id: string;
+  role: "owner" | "member";
+  joined_at: string;
+}
+
+export interface BoardShare {
+  id: string;
+  board_id: string;
+  group_id: string;
+  permission: "view" | "edit";
+  shared_at: string;
+  shared_by: string;
+}

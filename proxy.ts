@@ -12,6 +12,21 @@ export default auth((req) => {
   const hasShareToken = req.nextUrl.searchParams.has("share");
   const isBoardRoute = req.nextUrl.pathname.startsWith("/board");
 
+  // Handle invite token in URL - store it in a cookie for the OAuth flow
+  const inviteToken = req.nextUrl.searchParams.get("invite");
+  if (inviteToken && isAuthPage) {
+    const response = NextResponse.next();
+    // Set cookie with invite token that expires in 1 hour
+    response.cookies.set("invite_token", inviteToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 3600, // 1 hour
+      path: "/",
+    });
+    return response;
+  }
+
   if (isAuthPage) {
     if (isAuth) {
       return NextResponse.redirect(new URL("/dashboard", req.url));

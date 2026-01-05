@@ -8,38 +8,129 @@
 
 ### Story: Existing user can share a board via link
 
-- [ ] **As a** logged-in user  
+- [x] **As a** logged-in user  
        **I want to** share a board with others  
        **So that** I share my goal progress
 
 **Acceptance Criteria:**
 
-- [ ] Existing User can share a board with others - non-users can view the board
+- [x] Existing User can share a board with others - non-users can view the board
+- [x] If the board owner is viewing their shared board using the share link, the board should not show the read-only banner and be editable
+- [x] A viewer in read-only mode should be able to see the details of the goal, but the mark as complete button should not be available
 
 ### Story: Existing user can invite a new user to the platform
 
-- [ ] **As a** logged-in user  
-       **I want to** invite a new user to the platform  
-       **So that** I can share my board with others
+- [x] **As a** logged-in user
+      **I want to** invite a new user to the platform
+      **So that** I can share my board with others
 
 **Acceptance Criteria:**
 
-- [ ] Existing User can invite an email of another user to the platform
+- [x] Existing User can invite an email of another user to the platform from the dashboard.
+- [x] The user will be given an invite link.
+- [x] The new user who clicks on the invite link will be taken to the login page and prompted to login with OAuth
+- [x] The new user will have a reference to the existing user who invited them in their database for tracking purposes.
+- [x] The new user will be taken to the dashboard after logging in
+- [ ] The new user will be automatically added to the inviter's group (see Group Management stories below)
 
-# Group Management
+## Group Management
 
-### Story: User Can Create Group
+**Design Notes:**
 
-- [ ] **As a** logged-in user  
-       **I want to** create a group that other users can join
-      **So that** I can share or collaborate on goals with others
+- Each user has one personal group (no group names needed at this time)
+- Users cannot create multiple groups
+- The invite link system is extended to add users to groups
+- If an existing user clicks an invite link, they are added to the inviter's group
+- If a new user clicks an invite link, they register and are automatically added to the inviter's group
+
+### Story: Automatic Group Creation on User Registration
+
+- [ ] **As a** new user
+      **I want to** have a personal group created automatically when I sign up
+      **So that** I can manage friends and share boards with them
 
 **Acceptance Criteria:**
 
-- [ ] User can create a group
-- [ ] User can invite other users to join the group
-- [ ] User can add goal boards to the group
-- [ ] All personal boards are in a "Personal" group by default
+- [ ] New users automatically get a personal group created on registration
+- [ ] Existing users get a personal group created via migration
+- [ ] User is automatically added as the owner of their personal group
+- [ ] Group has no name (single group per user design)
+
+### Story: Add Users to Group via Invite Link
+
+- [ ] **As a** group owner
+      **I want to** share an invite link that adds users to my group
+      **So that** I can easily add friends to share boards with
+
+**Acceptance Criteria:**
+
+- [ ] User can generate an invite/add-to-group link from the dashboard
+- [ ] Link can be shared via any method (email, messaging, etc.)
+- [ ] When an existing logged-in user clicks the link, they are immediately added to the inviter's group
+- [ ] When a new user clicks the link, they are prompted to register and then added to the inviter's group
+- [ ] When a logged-out existing user clicks the link, they are prompted to log in and then added to the inviter's group
+- [ ] User receives confirmation when successfully added to a group
+- [ ] Invite link reuses/extends the existing invitation system
+
+### Story: View and Manage Group Members
+
+- [ ] **As a** group owner
+      **I want to** view and manage members in my group
+      **So that** I can control who has access to my shared boards
+
+**Acceptance Criteria:**
+
+- [ ] User can view a list of all members in their group
+- [ ] User can see when each member joined
+- [ ] User can remove members from their group
+- [ ] Removed members lose access to shared boards immediately
+- [ ] User receives confirmation before removing a member
+
+### Story: Leave a Group
+
+- [ ] **As a** group member
+      **I want to** leave a group I've been added to
+      **So that** I can manage my own group memberships
+
+**Acceptance Criteria:**
+
+- [ ] User can see which groups they are a member of (not owner)
+- [ ] User can leave a group they've been added to
+- [ ] User receives confirmation before leaving
+- [ ] Leaving a group removes access to that group's shared boards
+- [ ] User cannot leave their own personal group (they are the owner)
+
+### Story: Share Board with Group (View Only)
+
+- [ ] **As a** board owner
+      **I want to** share my board with my group as view-only
+      **So that** my friends can see my goals and progress
+
+**Acceptance Criteria:**
+
+- [ ] Board owner can toggle "Share with Friends" on any of their boards
+- [ ] Shared boards are visible to all members of the owner's group
+- [ ] Group members can view shared boards but cannot edit them
+- [ ] Shared boards clearly indicate who owns them
+- [ ] Board owner can unshare a board at any time
+- [ ] Unsharing immediately removes access for all group members
+- [ ] Shared boards appear in a dedicated section or are clearly marked on the dashboard
+
+### Story: Collaborative Boards (Edit Permission)
+
+- [ ] **As a** board owner
+      **I want to** allow my group members to edit my board
+      **So that** we can collaborate on shared goals
+
+**Acceptance Criteria:**
+
+- [ ] Board owner can set permission level when sharing (view or edit)
+- [ ] Group members with edit permission can add/edit/delete goals (on unlocked boards)
+- [ ] Group members with edit permission can mark goals as complete (on locked boards)
+- [ ] Board owner can change permission level after sharing (view ↔ edit)
+- [ ] Board owner always retains full control (can lock, delete, unshare)
+- [ ] Collaborative boards clearly show they are editable
+- [ ] (Optional) Activity log shows who made changes for accountability
 
 ### Story: View Goal Details
 
