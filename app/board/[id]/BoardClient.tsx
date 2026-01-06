@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Board, Goal } from "@/lib/types";
-import styles from "./board.module.css";
+import gridStyles from "./board-grid.module.css";
 import {
   celebrateGoalCompletion,
   celebrateBingo,
@@ -419,21 +419,24 @@ export default function BoardClient({
   };
 
   return (
-    <div className={styles.page}>
-      <header className={styles.header}>
-        <div className={styles.logo} onClick={() => router.push("/dashboard")}>
+    <div className="min-h-screen bg-gradient-to-br from-accent-purple to-accent-indigo">
+      <header className="bg-white bg-opacity-95 px-6 py-4 flex justify-between items-center shadow-soft">
+        <div
+          className="flex items-center gap-3 text-2xl font-bold text-accent-purple cursor-pointer transition-opacity hover:opacity-80"
+          onClick={() => router.push("/dashboard")}
+        >
           <span>🎯</span>
           <span>Bingoooal</span>
         </div>
-        <div className={styles.userInfo}>
+        <div className="flex items-center gap-3">
           {user?.image && (
             <img
               src={user.image}
               alt={user.name || ""}
-              className={styles.userAvatar}
+              className="w-9 h-9 rounded-full"
             />
           )}
-          <span className={styles.userName}>
+          <span className="text-sm text-gray-800 hidden md:inline">
             {isSharedView
               ? "Viewing Shared Board"
               : user?.name || user?.email || "User"}
@@ -441,12 +444,12 @@ export default function BoardClient({
         </div>
       </header>
 
-      <div className={styles.container}>
+      <div className="max-w-5xl mx-auto px-6 py-10">
         {!isSharedView && (
-          <div className={styles.backButtonTop}>
+          <div className="mb-5">
             <button
               onClick={() => router.push("/dashboard")}
-              className={styles.backBtn}
+              className="px-6 py-3 bg-white text-accent-purple border-2 border-accent-purple rounded-lg text-base font-medium cursor-pointer transition-all duration-200 organic-shape-1 shadow-hand-md rotate-slight-1 hover:bg-accent-purple hover:text-white hover:rotate-0 hover:-translate-y-0.5 hover:shadow-hand-lg"
             >
               ← Back to Dashboard
             </button>
@@ -454,27 +457,33 @@ export default function BoardClient({
         )}
 
         {isSharedView && (
-          <div className={styles.sharedBanner}>
+          <div className="bg-secondary-100 border-2 border-secondary-300 text-secondary-800 px-6 py-4 rounded-lg mb-6 text-center font-medium organic-shape-2">
             👁️ You are viewing a shared board in read-only mode
           </div>
         )}
 
-        <div className={styles.boardHeader}>
+        <div className="bg-white rounded-xl p-6 mb-6 shadow-hand-md flex justify-between items-center organic-shape-1 rotate-slight-2">
           <div>
-            <h1>{currentBoard.title}</h1>
-            <p className={styles.year}>{currentBoard.year}</p>
+            <h1 className="text-gray-800 m-0 mb-2 text-3xl font-bold">
+              {currentBoard.title}
+            </h1>
+            <p className="text-gray-600 m-0 text-base">{currentBoard.year}</p>
           </div>
-          <div className={styles.headerActions}>
+          <div className="flex gap-3 items-center flex-wrap">
             {isSharedView ? (
-              <span className={styles.sharedBadge}>👁️ Read-Only</span>
+              <span className="px-4 py-2 bg-secondary-100 text-secondary-700 rounded-lg font-medium border-2 border-secondary-300">
+                👁️ Read-Only
+              </span>
             ) : (
               <>
                 {currentBoard.locked ? (
-                  <span className={styles.lockedBadge}>🔒 Locked</span>
+                  <span className="px-4 py-2 bg-success-light bg-opacity-10 text-success-dark rounded-lg font-medium border-2 border-success-light">
+                    🔒 Locked
+                  </span>
                 ) : (
                   <button
                     onClick={() => setShowLockConfirm(true)}
-                    className={styles.lockBtn}
+                    className="px-4 py-2 bg-success-light text-white font-medium rounded-lg shadow-soft cursor-pointer transition-all duration-200 hover:bg-success hover:-translate-y-0.5 hover:shadow-medium disabled:opacity-50 disabled:cursor-not-allowed organic-shape-3"
                     disabled={goals.length < 25}
                     title={
                       goals.length < 25
@@ -485,15 +494,21 @@ export default function BoardClient({
                     🔒 Lock Board
                   </button>
                 )}
-                <button onClick={openShareModal} className={styles.shareBtn}>
+                <button
+                  onClick={openShareModal}
+                  className="px-4 py-2 bg-secondary-500 text-white font-medium rounded-lg shadow-soft cursor-pointer transition-all duration-200 hover:bg-secondary-600 hover:-translate-y-0.5 hover:shadow-medium organic-shape-4"
+                >
                   🔗 Share
                 </button>
-                <button onClick={openEditModal} className={styles.editBtn}>
+                <button
+                  onClick={openEditModal}
+                  className="px-4 py-2 bg-accent-purple text-white font-medium rounded-lg shadow-soft cursor-pointer transition-all duration-200 hover:bg-primary-600 hover:-translate-y-0.5 hover:shadow-medium organic-shape-1"
+                >
                   ✏️ Edit
                 </button>
                 <button
                   onClick={() => setShowDeleteConfirm(true)}
-                  className={styles.deleteBtn}
+                  className="px-4 py-2 bg-danger text-white font-medium rounded-lg shadow-soft cursor-pointer transition-all duration-200 hover:bg-danger-dark hover:-translate-y-0.5 hover:shadow-medium organic-shape-2"
                 >
                   🗑️ Delete
                 </button>
@@ -502,49 +517,49 @@ export default function BoardClient({
           </div>
         </div>
 
-        <div className={styles.progressSection}>
-          <div className={styles.progressBar}>
+        <div className="bg-white rounded-xl p-6 mb-6 shadow-hand-md organic-shape-2">
+          <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden mb-3">
             <div
-              className={styles.progressFill}
+              className="h-full bg-gradient-to-r from-success-light to-success transition-all duration-500"
               style={{ width: `${progress}%` }}
             />
           </div>
-          <p className={styles.progressText}>
+          <p className="text-gray-700 text-center font-medium">
             {completedCount} of {totalGoals} goals completed ({progress}%)
           </p>
         </div>
 
-        <div className={styles.bingoGrid}>
+        <div className={gridStyles.bingoGrid}>
           {Array.from({ length: 25 }, (_, i) => {
             const goal = goalMap.get(i);
             return (
               <div
                 key={i}
-                className={`${styles.cell} ${
-                  goal ? styles.filled : styles.empty
-                } ${goal?.completed ? styles.completed : ""} ${
-                  goal?.is_free_space ? styles.freeSpace : ""
+                className={`${gridStyles.cell} ${
+                  goal ? gridStyles.filled : gridStyles.empty
+                } ${goal?.completed ? gridStyles.completed : ""} ${
+                  goal?.is_free_space ? gridStyles.freeSpace : ""
                 }`}
                 onClick={() => handleCellClick(i)}
               >
                 {goal ? (
-                  <div className={styles.goalContent}>
-                    <span className={styles.goalText}>
+                  <div className={gridStyles.goalContent}>
+                    <span className={gridStyles.goalText}>
                       {goal.is_free_space ? "Free Space" : goal.text}
                     </span>
                   </div>
                 ) : (
-                  <span className={styles.addIcon}>+</span>
+                  <span className={gridStyles.addIcon}>+</span>
                 )}
               </div>
             );
           })}
         </div>
 
-        <div className={styles.actions}>
+        <div className="flex justify-center gap-3 mb-6">
           <button
             onClick={() => router.push("/dashboard")}
-            className={styles.backBtn}
+            className="px-6 py-3 bg-white text-accent-purple border-2 border-accent-purple rounded-lg text-base font-medium cursor-pointer transition-all duration-200 organic-shape-1 shadow-hand-md rotate-slight-1 hover:bg-accent-purple hover:text-white hover:rotate-0 hover:-translate-y-0.5 hover:shadow-hand-lg"
           >
             ← Back to Dashboard
           </button>
@@ -553,23 +568,30 @@ export default function BoardClient({
 
       {/* Goal Create/Edit Modal */}
       {showGoalModal && (
-        <div className={styles.modal} onClick={() => setShowGoalModal(false)}>
+        <div className="modal-overlay" onClick={() => setShowGoalModal(false)}>
           <div
-            className={styles.modalContent}
+            className="modal-base organic-shape-3 shadow-hand-lg max-w-xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className={styles.modalHeader}>
-              <h2>{selectedGoal ? "Edit Goal" : "Add Goal"}</h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl text-gray-800 font-semibold m-0">
+                {selectedGoal ? "Edit Goal" : "Add Goal"}
+              </h2>
               <button
                 onClick={() => setShowGoalModal(false)}
-                className={styles.closeBtn}
+                className="bg-transparent border-none text-2xl text-gray-400 cursor-pointer p-0 w-8 h-8 flex items-center justify-center rounded transition-colors hover:bg-gray-100"
               >
                 ×
               </button>
             </div>
             <form onSubmit={handleSaveGoal}>
-              <div className={styles.formGroup}>
-                <label htmlFor="goal-text">Goal Description</label>
+              <div className="mb-5">
+                <label
+                  htmlFor="goal-text"
+                  className="block mb-2 text-gray-800 font-medium"
+                >
+                  Goal Description
+                </label>
                 <textarea
                   id="goal-text"
                   value={goalFormData.text}
@@ -580,9 +602,9 @@ export default function BoardClient({
                   maxLength={200}
                   rows={4}
                   required
-                  className={styles.textarea}
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg text-base transition-all organic-shape-4 shadow-hand-sm focus:outline-none focus:border-accent-purple focus:shadow-hand-md focus:-translate-y-0.5 resize-none"
                 />
-                <div className={styles.charCount}>
+                <div className="text-sm text-gray-500 mt-1 text-right">
                   {goalFormData.text.length}/200 characters
                 </div>
               </div>
@@ -590,13 +612,13 @@ export default function BoardClient({
                 <button
                   type="button"
                   onClick={getRandomGoal}
-                  className={styles.inspireBtn}
+                  className="w-full mb-4 px-4 py-2 bg-warning text-white font-medium rounded-lg shadow-soft cursor-pointer transition-all duration-200 hover:bg-warning-dark hover:-translate-y-0.5 hover:shadow-medium organic-shape-2"
                 >
                   ✨ Inspire Me
                 </button>
               )}
-              <div className={styles.checkboxGroup}>
-                <label>
+              <div className="mb-6">
+                <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={goalFormData.is_free_space}
@@ -609,16 +631,19 @@ export default function BoardClient({
                         text: isChecked ? "Free Space" : goalFormData.text,
                       });
                     }}
+                    className="w-auto cursor-pointer"
                   />
-                  <span>Mark as free space (auto-completed)</span>
+                  <span className="text-gray-700">
+                    Mark as free space (auto-completed)
+                  </span>
                 </label>
               </div>
-              <div className={styles.modalActions}>
+              <div className="flex gap-3 justify-end">
                 {selectedGoal && !selectedGoal.is_free_space && (
                   <button
                     type="button"
                     onClick={() => setShowGoalDeleteConfirm(true)}
-                    className={styles.deleteGoalBtn}
+                    className="btn-danger organic-shape-1"
                   >
                     Delete Goal
                   </button>
@@ -626,7 +651,7 @@ export default function BoardClient({
                 <button
                   type="submit"
                   disabled={isGoalSaving}
-                  className={styles.submitBtn}
+                  className="btn-primary organic-shape-2 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {isGoalSaving
                     ? "Saving..."
@@ -643,37 +668,39 @@ export default function BoardClient({
       {/* Goal Delete Confirmation */}
       {showGoalDeleteConfirm && selectedGoal && (
         <div
-          className={styles.modal}
+          className="modal-overlay"
           onClick={() => setShowGoalDeleteConfirm(false)}
         >
           <div
-            className={styles.modalContent}
+            className="modal-base organic-shape-2 shadow-hand-lg max-w-xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className={styles.modalHeader}>
-              <h2>Delete Goal?</h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl text-gray-800 font-semibold">
+                Delete Goal?
+              </h2>
               <button
                 onClick={() => setShowGoalDeleteConfirm(false)}
-                className={styles.closeBtn}
+                className="bg-transparent border-none text-2xl text-gray-400 cursor-pointer p-0 w-8 h-8 flex items-center justify-center rounded transition-colors hover:bg-gray-100"
               >
                 ×
               </button>
             </div>
-            <p className={styles.confirmText}>
+            <p className="text-gray-600 leading-relaxed mb-6">
               Are you sure you want to delete this goal? This action cannot be
               undone.
             </p>
-            <div className={styles.confirmActions}>
+            <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setShowGoalDeleteConfirm(false)}
-                className={styles.cancelBtn}
+                className="btn-outline organic-shape-4 disabled:opacity-60 disabled:cursor-not-allowed"
                 disabled={isGoalDeleting}
               >
                 Cancel
               </button>
               <button
                 onClick={handleDeleteGoal}
-                className={styles.confirmDeleteBtn}
+                className="btn-danger organic-shape-1 disabled:opacity-60 disabled:cursor-not-allowed"
                 disabled={isGoalDeleting}
               >
                 {isGoalDeleting ? "Deleting..." : "Delete Goal"}
@@ -685,36 +712,41 @@ export default function BoardClient({
 
       {/* Lock Board Confirmation */}
       {showLockConfirm && (
-        <div className={styles.modal} onClick={() => setShowLockConfirm(false)}>
+        <div
+          className="modal-overlay"
+          onClick={() => setShowLockConfirm(false)}
+        >
           <div
-            className={styles.modalContent}
+            className="modal-base organic-shape-3 shadow-hand-lg max-w-xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className={styles.modalHeader}>
-              <h2>Lock Board?</h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl text-gray-800 font-semibold">
+                Lock Board?
+              </h2>
               <button
                 onClick={() => setShowLockConfirm(false)}
-                className={styles.closeBtn}
+                className="bg-transparent border-none text-2xl text-gray-400 cursor-pointer p-0 w-8 h-8 flex items-center justify-center rounded transition-colors hover:bg-gray-100"
               >
                 ×
               </button>
             </div>
-            <p className={styles.confirmText}>
+            <p className="text-gray-600 leading-relaxed mb-6">
               Once locked, you can only mark goals as complete. You won't be
               able to add, edit, or delete goals. This action cannot be undone.
               Are you ready to start tracking your progress?
             </p>
-            <div className={styles.confirmActions}>
+            <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setShowLockConfirm(false)}
-                className={styles.cancelBtn}
+                className="btn-outline organic-shape-4 disabled:opacity-60 disabled:cursor-not-allowed"
                 disabled={isLocking}
               >
                 Cancel
               </button>
               <button
                 onClick={handleLockBoard}
-                className={styles.confirmBtn}
+                className="btn-primary organic-shape-1 disabled:opacity-60 disabled:cursor-not-allowed"
                 disabled={isLocking}
               >
                 {isLocking ? "Locking..." : "Lock Board"}
@@ -726,23 +758,30 @@ export default function BoardClient({
 
       {/* Edit Board Modal */}
       {showEditModal && (
-        <div className={styles.modal} onClick={() => setShowEditModal(false)}>
+        <div className="modal-overlay" onClick={() => setShowEditModal(false)}>
           <div
-            className={styles.modalContent}
+            className="modal-base organic-shape-2 shadow-hand-lg max-w-xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className={styles.modalHeader}>
-              <h2>Edit Board</h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl text-gray-800 font-semibold">
+                Edit Board
+              </h2>
               <button
                 onClick={() => setShowEditModal(false)}
-                className={styles.closeBtn}
+                className="bg-transparent border-none text-2xl text-gray-400 cursor-pointer p-0 w-8 h-8 flex items-center justify-center rounded transition-colors hover:bg-gray-100"
               >
                 ×
               </button>
             </div>
             <form onSubmit={handleEditBoard}>
-              <div className={styles.formGroup}>
-                <label htmlFor="edit-title">Board Title</label>
+              <div className="mb-5">
+                <label
+                  htmlFor="edit-title"
+                  className="block mb-2 text-gray-800 font-medium"
+                >
+                  Board Title
+                </label>
                 <input
                   type="text"
                   id="edit-title"
@@ -752,10 +791,16 @@ export default function BoardClient({
                   }
                   placeholder="e.g., 2025 Goals"
                   required
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg text-base transition-all organic-shape-4 shadow-hand-sm focus:outline-none focus:border-accent-purple focus:shadow-hand-md focus:-translate-y-0.5"
                 />
               </div>
-              <div className={styles.formGroup}>
-                <label htmlFor="edit-year">Year</label>
+              <div className="mb-5">
+                <label
+                  htmlFor="edit-year"
+                  className="block mb-2 text-gray-800 font-medium"
+                >
+                  Year
+                </label>
                 <input
                   type="number"
                   id="edit-year"
@@ -769,12 +814,13 @@ export default function BoardClient({
                   min="1900"
                   max="2100"
                   required
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg text-base transition-all organic-shape-4 shadow-hand-sm focus:outline-none focus:border-accent-purple focus:shadow-hand-md focus:-translate-y-0.5"
                 />
               </div>
               <button
                 type="submit"
                 disabled={isEditing}
-                className={styles.submitBtn}
+                className="btn-primary w-full organic-shape-1 disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {isEditing ? "Saving..." : "Save Changes"}
               </button>
@@ -785,48 +831,58 @@ export default function BoardClient({
 
       {/* Share Modal */}
       {showShareModal && (
-        <div className={styles.modal} onClick={() => setShowShareModal(false)}>
+        <div className="modal-overlay" onClick={() => setShowShareModal(false)}>
           <div
-            className={styles.modalContent}
+            className="modal-base organic-shape-3 shadow-hand-lg max-w-xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className={styles.modalHeader}>
-              <h2>Share Board</h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl text-gray-800 font-semibold">
+                Share Board
+              </h2>
               <button
                 onClick={() => setShowShareModal(false)}
-                className={styles.closeBtn}
+                className="bg-transparent border-none text-2xl text-gray-400 cursor-pointer p-0 w-8 h-8 flex items-center justify-center rounded transition-colors hover:bg-gray-100"
               >
                 ×
               </button>
             </div>
-            <div className={styles.shareContent}>
-              <p className={styles.shareDescription}>
+            <div className="py-5">
+              <p className="text-gray-600 text-base leading-relaxed mb-6">
                 {currentBoard.is_public
                   ? "Your board is currently public. Anyone with the link can view it."
                   : "Enable sharing to generate a link that others can use to view your board."}
               </p>
-              <div className={styles.shareToggle}>
-                <label className={styles.toggleLabel}>
+              <div className="mb-6">
+                <label className="flex items-center gap-3 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={currentBoard.is_public}
                     onChange={handleToggleShare}
                     disabled={isTogglingShare}
+                    className="w-5 h-5 cursor-pointer"
                   />
-                  <span>Enable public sharing</span>
+                  <span className="text-base text-gray-800">
+                    Enable public sharing
+                  </span>
                 </label>
               </div>
               {currentBoard.is_public && shareUrl && (
-                <div className={styles.shareLinkSection}>
-                  <label>Share Link:</label>
-                  <div className={styles.shareLinkContainer}>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Share Link:
+                  </label>
+                  <div className="flex gap-3">
                     <input
                       type="text"
                       value={shareUrl}
                       readOnly
-                      className={styles.shareLinkInput}
+                      className="flex-1 p-3 border-2 border-gray-200 rounded-lg text-sm font-mono bg-gray-50 text-gray-800 organic-shape-4"
                     />
-                    <button onClick={copyShareLink} className={styles.copyBtn}>
+                    <button
+                      onClick={copyShareLink}
+                      className="px-5 py-3 bg-accent-purple text-white font-medium rounded-lg shadow-soft cursor-pointer transition-all duration-200 hover:bg-primary-600 hover:-translate-y-0.5 hover:shadow-medium whitespace-nowrap organic-shape-2"
+                    >
                       📋 Copy
                     </button>
                   </div>
@@ -840,38 +896,40 @@ export default function BoardClient({
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && (
         <div
-          className={styles.modal}
+          className="modal-overlay"
           onClick={() => setShowDeleteConfirm(false)}
         >
           <div
-            className={styles.modalContent}
+            className="modal-base organic-shape-3 shadow-hand-lg max-w-md"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className={styles.modalHeader}>
-              <h2>Delete Board?</h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl text-gray-800 font-semibold">
+                Delete Board?
+              </h2>
               <button
                 onClick={() => setShowDeleteConfirm(false)}
-                className={styles.closeBtn}
+                className="bg-transparent border-none text-2xl text-gray-400 cursor-pointer p-0 w-8 h-8 flex items-center justify-center rounded transition-colors hover:bg-gray-100"
               >
                 ×
               </button>
             </div>
-            <p className={styles.confirmText}>
+            <p className="text-gray-700 text-base leading-relaxed mb-6">
               Are you sure you want to delete "{currentBoard.title}"? This
               action cannot be undone and will permanently delete all goals on
               this board.
             </p>
-            <div className={styles.confirmActions}>
+            <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setShowDeleteConfirm(false)}
-                className={styles.cancelBtn}
+                className="px-6 py-3 bg-gray-200 text-gray-800 font-medium rounded-lg shadow-soft cursor-pointer transition-all duration-200 hover:bg-gray-300 hover:-translate-y-0.5 hover:shadow-medium disabled:opacity-60 disabled:cursor-not-allowed organic-shape-1"
                 disabled={isDeleting}
               >
                 Cancel
               </button>
               <button
                 onClick={handleDeleteBoard}
-                className={styles.confirmDeleteBtn}
+                className="px-6 py-3 bg-danger text-white font-medium rounded-lg shadow-soft cursor-pointer transition-all duration-200 hover:bg-danger-dark hover:-translate-y-0.5 hover:shadow-medium disabled:opacity-60 disabled:cursor-not-allowed organic-shape-2"
                 disabled={isDeleting}
               >
                 {isDeleting ? "Deleting..." : "Delete Board"}
@@ -884,61 +942,71 @@ export default function BoardClient({
       {/* Goal Details Modal */}
       {showDetailsModal && selectedGoal && (
         <div
-          className={styles.modal}
+          className="modal-overlay"
           onClick={() => setShowDetailsModal(false)}
         >
           <div
-            className={styles.modalContent}
+            className="modal-base organic-shape-3 shadow-hand-lg max-w-lg"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className={styles.modalHeader}>
-              <h2>Goal Details</h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl text-gray-800 font-semibold">
+                Goal Details
+              </h2>
               <button
                 onClick={() => setShowDetailsModal(false)}
-                className={styles.closeBtn}
+                className="bg-transparent border-none text-2xl text-gray-400 cursor-pointer p-0 w-8 h-8 flex items-center justify-center rounded transition-colors hover:bg-gray-100"
               >
                 ×
               </button>
             </div>
-            <div className={styles.goalDetailsContent}>
-              <div className={styles.detailsSection}>
-                <label className={styles.detailsLabel}>Goal:</label>
-                <div className={styles.detailsText}>
+            <div className="py-5 space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Goal:
+                </label>
+                <div className="text-base text-gray-800">
                   {selectedGoal.is_free_space
                     ? "Free Space"
                     : selectedGoal.text}
                 </div>
               </div>
-              <div className={styles.detailsSection}>
-                <label className={styles.detailsLabel}>Status:</label>
-                <div className={styles.detailsText}>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Status:
+                </label>
+                <div className="text-base text-gray-800">
                   {selectedGoal.completed ? (
-                    <span className={styles.completedBadge}>✓ Completed</span>
+                    <span className="inline-block px-3 py-1 bg-success text-white rounded-full text-sm font-medium">
+                      ✓ Completed
+                    </span>
                   ) : (
-                    <span className={styles.incompleteBadge}>
+                    <span className="inline-block px-3 py-1 bg-gray-300 text-gray-700 rounded-full text-sm font-medium">
                       Not Completed
                     </span>
                   )}
                 </div>
               </div>
               {selectedGoal.is_free_space && (
-                <div className={styles.detailsSection}>
-                  <p className={styles.freeSpaceNote}>
+                <div>
+                  <p className="text-sm text-gray-600 italic bg-gray-50 p-3 rounded-lg">
                     🎁 This is a free space - it's automatically completed and
                     cannot be changed.
                   </p>
                 </div>
               )}
               {selectedGoal.completed_at && (
-                <div className={styles.detailsSection}>
-                  <label className={styles.detailsLabel}>Completed on:</label>
-                  <p className={styles.detailsText}>
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Completed on:
+                  </label>
+                  <p className="text-base text-gray-800">
                     {new Date(selectedGoal.completed_at).toLocaleDateString()}
                   </p>
                 </div>
               )}
             </div>
-            <div className={styles.modalActions}>
+            <div className="flex gap-3 justify-end pt-4 border-t-2 border-gray-100">
               {!selectedGoal.is_free_space && !isSharedView && (
                 <button
                   onClick={async () => {
@@ -947,8 +1015,8 @@ export default function BoardClient({
                   }}
                   className={
                     selectedGoal.completed
-                      ? styles.markIncompleteBtn
-                      : styles.markCompleteBtn
+                      ? "px-6 py-3 bg-warning text-white font-medium rounded-lg shadow-soft cursor-pointer transition-all duration-200 hover:bg-warning-dark hover:-translate-y-0.5 hover:shadow-medium organic-shape-1"
+                      : "px-6 py-3 bg-success text-white font-medium rounded-lg shadow-soft cursor-pointer transition-all duration-200 hover:bg-success-dark hover:-translate-y-0.5 hover:shadow-medium organic-shape-1"
                   }
                 >
                   {selectedGoal.completed
@@ -958,7 +1026,7 @@ export default function BoardClient({
               )}
               <button
                 onClick={() => setShowDetailsModal(false)}
-                className={styles.cancelBtn}
+                className="px-6 py-3 bg-gray-200 text-gray-800 font-medium rounded-lg shadow-soft cursor-pointer transition-all duration-200 hover:bg-gray-300 hover:-translate-y-0.5 hover:shadow-medium organic-shape-2"
               >
                 Close
               </button>

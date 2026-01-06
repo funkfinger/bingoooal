@@ -3,7 +3,6 @@
 import { signIn } from "next-auth/react";
 import { useSearchParams } from "next/navigation";
 import { useState, Suspense } from "react";
-import styles from "./login.module.css";
 
 function LoginForm() {
   const searchParams = useSearchParams();
@@ -23,16 +22,18 @@ function LoginForm() {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.loginBox}>
-        <div className={styles.logo}>🎯</div>
-        <h1 className={styles.title}>Welcome to Bingoooal</h1>
-        <p className={styles.subtitle}>
+    <div className="min-h-screen flex items-center justify-center p-5 bg-gradient-to-br from-accent-purple to-accent-indigo">
+      <div className="bg-white rounded-2xl shadow-xl p-12 max-w-md w-full text-center organic-shape-1">
+        <div className="text-5xl mb-4">🎯</div>
+        <h1 className="text-gray-800 mb-3 text-3xl font-semibold">
+          Welcome to Bingoooal
+        </h1>
+        <p className="text-gray-600 mb-8 text-base">
           Track your yearly goals in bingo format
         </p>
 
         {error && (
-          <div className={styles.error}>
+          <div className="bg-red-50 text-red-700 p-3 rounded-lg mb-5 text-sm">
             {error === "OAuthSignin" && "Error signing in with Google"}
             {error === "OAuthCallback" && "Error during authentication"}
             {error === "OAuthCreateAccount" && "Could not create account"}
@@ -61,9 +62,9 @@ function LoginForm() {
         <button
           onClick={handleGoogleSignIn}
           disabled={isLoading}
-          className={styles.googleBtn}
+          className="flex items-center justify-center gap-3 w-full px-6 py-3.5 bg-white border-2 border-gray-300 rounded-lg text-base font-medium text-gray-800 cursor-pointer transition-all duration-200 organic-shape-2 hover:bg-gray-50 hover:border-accent-purple hover:-translate-y-0.5 hover:shadow-medium active:translate-y-0 disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          <svg className={styles.googleIcon} viewBox="0 0 24 24">
+          <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path
               fill="#4285F4"
               d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"

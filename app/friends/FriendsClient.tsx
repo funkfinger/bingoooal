@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import styles from "./friends.module.css";
 
 interface User {
   id: string;
@@ -176,92 +175,104 @@ export default function FriendsClient({ user }: FriendsClientProps) {
   };
 
   return (
-    <div className={styles.page}>
-      <header className={styles.header}>
-        <div className={styles.logo} onClick={() => router.push("/dashboard")}>
+    <div className="page-container">
+      <header className="bg-white border-b-2 border-gray-200 px-6 py-4 flex justify-between items-center shadow-hand-sm">
+        <div
+          className="flex items-center gap-3 text-2xl font-semibold text-gray-800 cursor-pointer transition-transform hover:-translate-y-0.5"
+          onClick={() => router.push("/dashboard")}
+        >
           <span>🎯</span>
           <span>Bingoooal</span>
         </div>
-        <div className={styles.userInfo}>
+        <div className="flex items-center gap-4">
           {user.image && (
             <img
               src={user.image}
               alt={user.name || ""}
-              className={styles.userAvatar}
+              className="w-10 h-10 rounded-full object-cover"
             />
           )}
-          <span className={styles.userName}>{user.name || user.email}</span>
+          <span className="font-medium text-gray-800 hidden md:inline">
+            {user.name || user.email}
+          </span>
         </div>
       </header>
 
-      <div className={styles.container}>
-        <div className={styles.backButton}>
+      <div className="max-w-5xl mx-auto px-6 py-10">
+        <div className="mb-6">
           <button
             onClick={() => router.push("/dashboard")}
-            className={styles.backBtn}
+            className="px-6 py-3 bg-white text-accent-purple border-2 border-accent-purple rounded-lg text-base font-medium cursor-pointer transition-all duration-200 organic-shape-1 shadow-hand-md rotate-slight-1 hover:bg-accent-purple hover:text-white hover:rotate-0 hover:-translate-y-0.5 hover:shadow-hand-lg"
           >
             ← Back to Dashboard
           </button>
         </div>
 
-        <div className={styles.content}>
-          <h1 className={styles.title}>Friends</h1>
+        <div className="bg-white rounded-xl p-8 shadow-hand-md organic-shape-2">
+          <h1 className="text-gray-800 mb-8 text-3xl font-bold">Friends</h1>
 
           {isLoading ? (
-            <div className={styles.loading}>Loading...</div>
+            <div className="text-center py-12 text-gray-600 text-lg">
+              Loading...
+            </div>
           ) : (
             <>
               {/* My Friends Group */}
-              <section className={styles.section}>
-                <div className={styles.sectionHeaderWithButton}>
+              <section className="mb-10">
+                <div className="flex justify-between items-start mb-6 flex-col md:flex-row gap-4">
                   <div>
-                    <h2 className={styles.sectionTitle}>
+                    <h2 className="text-2xl font-semibold text-gray-800 mb-2">
                       <span>👥</span> My Friends (
                       {members.filter((m) => m.role !== "owner").length})
                     </h2>
-                    <p className={styles.sectionDescription}>
+                    <p className="text-gray-600">
                       People you've invited to join your friends group
                     </p>
                   </div>
                   <button
                     onClick={() => setShowInviteModal(true)}
-                    className={styles.inviteUserBtn}
+                    className="btn-primary organic-shape-3 whitespace-nowrap w-full md:w-auto"
                   >
                     + Invite User
                   </button>
                 </div>
 
                 {members.filter((m) => m.role !== "owner").length === 0 ? (
-                  <div className={styles.emptyState}>
-                    <div className={styles.emptyIcon}>👋</div>
-                    <p>No friends yet. Invite someone to get started!</p>
+                  <div className="text-center py-12 text-gray-600">
+                    <div className="text-6xl mb-4">👋</div>
+                    <p className="mb-6">
+                      No friends yet. Invite someone to get started!
+                    </p>
                     <button
                       onClick={() => setShowInviteModal(true)}
-                      className={styles.inviteBtn}
+                      className="btn-primary organic-shape-4"
                     >
                       Invite User
                     </button>
                   </div>
                 ) : (
-                  <div className={styles.membersList}>
+                  <div className="space-y-4">
                     {members
                       .filter((member) => member.role !== "owner")
                       .map((member) => (
-                        <div key={member.id} className={styles.memberCard}>
-                          <div className={styles.memberInfo}>
+                        <div
+                          key={member.id}
+                          className="flex justify-between items-center p-4 bg-gray-50 border-2 border-gray-200 rounded-lg transition-all duration-200 organic-shape-1 hover:bg-gray-100 hover:border-gray-300 hover:translate-x-1"
+                        >
+                          <div className="flex items-center gap-4 flex-1">
                             {member.user.avatar_url && (
                               <img
                                 src={member.user.avatar_url}
                                 alt={member.user.name || ""}
-                                className={styles.memberAvatar}
+                                className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
                               />
                             )}
-                            <div className={styles.memberDetails}>
-                              <div className={styles.memberName}>
+                            <div className="flex-1">
+                              <div className="text-base font-semibold text-gray-800 mb-1">
                                 {member.user.name || member.user.email}
                               </div>
-                              <div className={styles.memberMeta}>
-                                <span className={styles.joinedDate}>
+                              <div className="text-sm text-gray-600">
+                                <span>
                                   Joined {formatDate(member.joined_at)}
                                 </span>
                               </div>
@@ -275,7 +286,7 @@ export default function FriendsClient({ user }: FriendsClientProps) {
                               )
                             }
                             disabled={removingMemberId === member.id}
-                            className={styles.removeBtn}
+                            className="px-4 py-2 bg-danger text-white font-medium rounded-lg shadow-soft cursor-pointer transition-all duration-200 hover:bg-danger-dark hover:-translate-y-0.5 hover:shadow-medium disabled:opacity-60 disabled:cursor-not-allowed organic-shape-2"
                           >
                             {removingMemberId === member.id
                               ? "Removing..."
@@ -288,42 +299,40 @@ export default function FriendsClient({ user }: FriendsClientProps) {
               </section>
 
               {/* Groups I'm In */}
-              <section className={styles.section}>
-                <h2 className={styles.sectionTitle}>
+              <section className="mb-10">
+                <h2 className="text-2xl font-semibold text-gray-800 mb-2">
                   <span>🤝</span> Groups I'm In ({myGroups.length})
                 </h2>
-                <p className={styles.sectionDescription}>
+                <p className="text-gray-600 mb-6">
                   Friends groups you've joined
                 </p>
 
                 {myGroups.length === 0 ? (
-                  <div className={styles.emptyState}>
-                    <div className={styles.emptyIcon}>🔗</div>
+                  <div className="text-center py-12 text-gray-600">
+                    <div className="text-6xl mb-4">🔗</div>
                     <p>You haven't joined any friends groups yet.</p>
                   </div>
                 ) : (
-                  <div className={styles.membersList}>
+                  <div className="space-y-4">
                     {myGroups.map((group) => (
                       <div
                         key={group.membership_id}
-                        className={styles.memberCard}
+                        className="flex justify-between items-center p-4 bg-gray-50 border-2 border-gray-200 rounded-lg transition-all duration-200 organic-shape-2 hover:bg-gray-100 hover:border-gray-300 hover:translate-x-1"
                       >
-                        <div className={styles.memberInfo}>
+                        <div className="flex items-center gap-4 flex-1">
                           {group.owner.avatar_url && (
                             <img
                               src={group.owner.avatar_url}
                               alt={group.owner.name || ""}
-                              className={styles.memberAvatar}
+                              className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
                             />
                           )}
-                          <div className={styles.memberDetails}>
-                            <div className={styles.memberName}>
+                          <div className="flex-1">
+                            <div className="text-base font-semibold text-gray-800 mb-1">
                               {group.owner.name || group.owner.email}'s Friends
                             </div>
-                            <div className={styles.memberMeta}>
-                              <span className={styles.joinedDate}>
-                                Joined {formatDate(group.joined_at)}
-                              </span>
+                            <div className="text-sm text-gray-600">
+                              <span>Joined {formatDate(group.joined_at)}</span>
                             </div>
                           </div>
                         </div>
@@ -335,7 +344,7 @@ export default function FriendsClient({ user }: FriendsClientProps) {
                             )
                           }
                           disabled={leavingGroupId === group.membership_id}
-                          className={styles.leaveBtn}
+                          className="px-4 py-2 bg-warning text-white font-medium rounded-lg shadow-soft cursor-pointer transition-all duration-200 hover:bg-warning-dark hover:-translate-y-0.5 hover:shadow-medium disabled:opacity-60 disabled:cursor-not-allowed organic-shape-3"
                         >
                           {leavingGroupId === group.membership_id
                             ? "Leaving..."
@@ -354,39 +363,41 @@ export default function FriendsClient({ user }: FriendsClientProps) {
       {/* Invite User Modal */}
       {showInviteModal && (
         <div
-          className={styles.modal}
+          className="modal-overlay"
           onClick={() => {
             setShowInviteModal(false);
             setInviteUrl("");
           }}
         >
           <div
-            className={styles.modalContent}
+            className="modal-base organic-shape-3 shadow-hand-lg max-w-xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className={styles.modalHeader}>
-              <h2>Invite User to Bingoooal</h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl text-gray-800 font-semibold">
+                Invite User to Bingoooal
+              </h2>
               <button
                 onClick={() => {
                   setShowInviteModal(false);
                   setInviteUrl("");
                 }}
-                className={styles.closeBtn}
+                className="bg-transparent border-none text-2xl text-gray-400 cursor-pointer p-0 w-8 h-8 flex items-center justify-center rounded transition-colors hover:bg-gray-100"
               >
                 ×
               </button>
             </div>
 
             {!inviteUrl ? (
-              <div className={styles.inviteContent}>
-                <p className={styles.inviteDescription}>
+              <div className="py-5">
+                <p className="text-gray-600 text-base leading-relaxed mb-6">
                   Generate an invite link to share with someone you'd like to
                   invite to the platform. They'll be able to sign up and start
                   tracking their goals!
                 </p>
                 <button
                   onClick={handleGenerateInvite}
-                  className={styles.generateInviteBtn}
+                  className="btn-primary w-full organic-shape-1 disabled:opacity-60 disabled:cursor-not-allowed"
                   disabled={isGeneratingInvite}
                 >
                   {isGeneratingInvite
@@ -395,25 +406,25 @@ export default function FriendsClient({ user }: FriendsClientProps) {
                 </button>
               </div>
             ) : (
-              <div className={styles.inviteContent}>
-                <p className={styles.inviteDescription}>
+              <div className="py-5">
+                <p className="text-gray-600 text-base leading-relaxed mb-4">
                   Share this link with the person you want to invite:
                 </p>
-                <div className={styles.inviteLinkContainer}>
+                <div className="flex gap-3 mb-4">
                   <input
                     type="text"
                     value={inviteUrl}
                     readOnly
-                    className={styles.inviteLinkInput}
+                    className="flex-1 p-3 border-2 border-gray-200 rounded-lg text-sm font-mono bg-gray-50 text-gray-800 organic-shape-4"
                   />
                   <button
                     onClick={handleCopyInviteLink}
-                    className={styles.copyBtn}
+                    className="px-5 py-3 bg-accent-purple text-white font-medium rounded-lg shadow-soft cursor-pointer transition-all duration-200 hover:bg-primary-600 hover:-translate-y-0.5 hover:shadow-medium whitespace-nowrap organic-shape-2"
                   >
                     📋 Copy
                   </button>
                 </div>
-                <p className={styles.inviteNote}>
+                <p className="text-gray-500 text-sm italic text-center">
                   This link will expire in 30 days and can only be used once.
                 </p>
               </div>

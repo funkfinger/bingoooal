@@ -4,7 +4,6 @@ import { useState } from "react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import type { Board } from "@/lib/types";
-import styles from "./dashboard.module.css";
 
 interface DashboardClientProps {
   user: {
@@ -142,91 +141,104 @@ export default function DashboardClient({
   };
 
   return (
-    <div className={styles.page}>
-      <header className={styles.header}>
-        <div className={styles.logo}>
+    <div className="page-container">
+      <header className="bg-white border-b-2 border-gray-200 px-6 py-4 flex justify-between items-center shadow-hand-sm">
+        <div className="flex items-center gap-3 text-2xl font-semibold text-gray-800">
           <span>🎯</span>
           <span>Bingoooal</span>
         </div>
-        <div className={styles.userInfo}>
+        <div className="flex items-center gap-4">
           {user.image && (
             <img
               src={user.image}
               alt={user.name || ""}
-              className={styles.userAvatar}
+              className="w-10 h-10 rounded-full object-cover"
             />
           )}
-          <span className={styles.userName}>{user.name || user.email}</span>
+          <span className="font-medium text-gray-800 hidden md:inline">
+            {user.name || user.email}
+          </span>
           <button
             onClick={() => router.push("/friends")}
-            className={styles.friendsBtn}
+            className="px-4 py-2 bg-primary-500 text-white font-medium rounded-lg shadow-hand-sm cursor-pointer transition-all duration-200 hover:bg-primary-600 hover:-translate-y-0.5 hover:shadow-hand-md organic-shape-1"
           >
             👥 Friends
           </button>
           <button
             onClick={() => signOut({ callbackUrl: "/" })}
-            className={styles.logoutBtn}
+            className="px-4 py-2 bg-accent-purple text-white font-medium rounded-lg shadow-hand-sm cursor-pointer transition-all duration-200 hover:bg-primary-600 hover:-translate-y-0.5 hover:shadow-hand-md organic-shape-2"
           >
             Logout
           </button>
         </div>
       </header>
 
-      <div className={styles.container}>
-        <div className={styles.welcome}>
-          <h1>Welcome back, {user.name?.split(" ")[0] || "there"}!</h1>
-          <p>Track your yearly goals with bingo boards</p>
+      <div className="content-container max-w-7xl">
+        <div className="bg-white rounded-xl p-8 mb-8 shadow-hand-md organic-shape-1 rotate-slight-1 transition-all duration-300 hover:rotate-0 hover:-translate-y-0.5 hover:shadow-hand-lg">
+          <h1 className="text-gray-800 mb-2 text-3xl font-bold">
+            Welcome back, {user.name?.split(" ")[0] || "there"}!
+          </h1>
+          <p className="text-gray-600 text-base">
+            Track your yearly goals with bingo boards
+          </p>
         </div>
 
-        <div className={styles.boardsSection}>
-          <div className={styles.sectionHeader}>
-            <h2>Your Boards</h2>
+        <div className="bg-white rounded-xl p-8 shadow-hand-md organic-shape-2">
+          <div className="flex justify-between items-center mb-6 flex-col md:flex-row gap-3 md:gap-0">
+            <h2 className="text-gray-800 text-2xl font-semibold">
+              Your Boards
+            </h2>
             <button
               onClick={() => setShowModal(true)}
-              className={styles.createBtn}
+              className="btn-primary organic-shape-3 w-full md:w-auto"
             >
               + Create New Board
             </button>
           </div>
 
           {boards.length === 0 ? (
-            <div className={styles.emptyState}>
-              <div className={styles.emptyIcon}>📋</div>
-              <p>
+            <div className="text-center py-16 px-5 text-gray-600">
+              <div className="text-6xl mb-4">📋</div>
+              <p className="mb-6">
                 No boards yet. Create your first bingo board to get started!
               </p>
               <button
                 onClick={() => setShowModal(true)}
-                className={styles.createBoardBtn}
+                className="btn-primary organic-shape-4"
               >
                 Create Your First Board
               </button>
             </div>
           ) : (
-            <div className={styles.boardsGrid}>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
               {boards.map((board) => (
-                <div key={board.id} className={styles.boardCard}>
+                <div
+                  key={board.id}
+                  className="gradient-card organic-shape-1 shadow-hand-md transition-all duration-200 hover:-translate-y-1 hover:shadow-hand-lg overflow-hidden"
+                >
                   <div
-                    className={styles.boardCardContent}
+                    className="p-6 cursor-pointer"
                     onClick={() => router.push(`/board/${board.id}`)}
                   >
-                    <h3>{board.title}</h3>
-                    <div className={styles.year}>{board.year}</div>
-                    <div className={styles.stats}>
+                    <h3 className="text-xl mb-2 font-semibold">
+                      {board.title}
+                    </h3>
+                    <div className="text-sm opacity-90 mb-4">{board.year}</div>
+                    <div className="text-sm opacity-90">
                       {board.locked ? "🔒 Locked" : "✏️ Editable"}
                     </div>
                   </div>
-                  <div className={styles.boardCardActions}>
+                  <div className="flex gap-2 px-6 py-3 bg-black bg-opacity-10 border-t border-white border-opacity-10">
                     <button
                       onClick={(e) => openEditModal(board, e)}
-                      className={styles.boardEditBtn}
+                      className="px-3 py-1.5 border-none rounded-md text-sm cursor-pointer transition-all duration-200 bg-white bg-opacity-20 text-white hover:bg-opacity-30"
                       title="Edit board"
                     >
                       ✏️
                     </button>
                     <button
                       onClick={(e) => openDeleteConfirm(board, e)}
-                      className={styles.boardDeleteBtn}
+                      className="px-3 py-1.5 border-none rounded-md text-sm cursor-pointer transition-all duration-200 bg-white bg-opacity-20 text-white hover:bg-danger hover:bg-opacity-80"
                       title="Delete board"
                     >
                       🗑️
@@ -240,23 +252,30 @@ export default function DashboardClient({
       </div>
 
       {showModal && (
-        <div className={styles.modal} onClick={() => setShowModal(false)}>
+        <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div
-            className={styles.modalContent}
+            className="modal-base organic-shape-3 shadow-hand-lg max-w-xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className={styles.modalHeader}>
-              <h2>Create New Board</h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl text-gray-800 font-semibold">
+                Create New Board
+              </h2>
               <button
                 onClick={() => setShowModal(false)}
-                className={styles.closeBtn}
+                className="bg-transparent border-none text-2xl text-gray-400 cursor-pointer p-0 w-8 h-8 flex items-center justify-center rounded transition-colors hover:bg-gray-100"
               >
                 ×
               </button>
             </div>
             <form onSubmit={handleCreateBoard}>
-              <div className={styles.formGroup}>
-                <label htmlFor="title">Board Title</label>
+              <div className="mb-5">
+                <label
+                  htmlFor="title"
+                  className="block mb-2 text-gray-800 font-medium"
+                >
+                  Board Title
+                </label>
                 <input
                   type="text"
                   id="title"
@@ -266,10 +285,16 @@ export default function DashboardClient({
                   }
                   placeholder="e.g., 2025 Goals"
                   required
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg text-base transition-all organic-shape-4 shadow-hand-sm focus:outline-none focus:border-accent-purple focus:shadow-hand-md focus:-translate-y-0.5"
                 />
               </div>
-              <div className={styles.formGroup}>
-                <label htmlFor="year">Year</label>
+              <div className="mb-5">
+                <label
+                  htmlFor="year"
+                  className="block mb-2 text-gray-800 font-medium"
+                >
+                  Year
+                </label>
                 <input
                   type="number"
                   id="year"
@@ -280,10 +305,11 @@ export default function DashboardClient({
                   min="2020"
                   max="2100"
                   required
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg text-base transition-all organic-shape-4 shadow-hand-sm focus:outline-none focus:border-accent-purple focus:shadow-hand-md focus:-translate-y-0.5"
                 />
               </div>
-              <div className={styles.checkboxGroup}>
-                <label>
+              <div className="mb-6">
+                <label className="flex items-center gap-2 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={formData.include_free_space}
@@ -293,14 +319,17 @@ export default function DashboardClient({
                         include_free_space: e.target.checked,
                       })
                     }
+                    className="w-auto cursor-pointer"
                   />
-                  <span>Include free space in center</span>
+                  <span className="text-gray-700">
+                    Include free space in center
+                  </span>
                 </label>
               </div>
               <button
                 type="submit"
                 disabled={isCreating}
-                className={styles.submitBtn}
+                className="btn-primary w-full organic-shape-1 disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {isCreating ? "Creating..." : "Create Board"}
               </button>
@@ -311,23 +340,30 @@ export default function DashboardClient({
 
       {/* Edit Board Modal */}
       {showEditModal && selectedBoard && (
-        <div className={styles.modal} onClick={() => setShowEditModal(false)}>
+        <div className="modal-overlay" onClick={() => setShowEditModal(false)}>
           <div
-            className={styles.modalContent}
+            className="modal-base organic-shape-2 shadow-hand-lg max-w-xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className={styles.modalHeader}>
-              <h2>Edit Board</h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl text-gray-800 font-semibold">
+                Edit Board
+              </h2>
               <button
                 onClick={() => setShowEditModal(false)}
-                className={styles.closeBtn}
+                className="bg-transparent border-none text-2xl text-gray-400 cursor-pointer p-0 w-8 h-8 flex items-center justify-center rounded transition-colors hover:bg-gray-100"
               >
                 ×
               </button>
             </div>
             <form onSubmit={handleEditBoard}>
-              <div className={styles.formGroup}>
-                <label htmlFor="edit-title">Board Title</label>
+              <div className="mb-5">
+                <label
+                  htmlFor="edit-title"
+                  className="block mb-2 text-gray-800 font-medium"
+                >
+                  Board Title
+                </label>
                 <input
                   type="text"
                   id="edit-title"
@@ -337,10 +373,16 @@ export default function DashboardClient({
                   }
                   placeholder="e.g., 2025 Goals"
                   required
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg text-base transition-all organic-shape-4 shadow-hand-sm focus:outline-none focus:border-accent-purple focus:shadow-hand-md focus:-translate-y-0.5"
                 />
               </div>
-              <div className={styles.formGroup}>
-                <label htmlFor="edit-year">Year</label>
+              <div className="mb-5">
+                <label
+                  htmlFor="edit-year"
+                  className="block mb-2 text-gray-800 font-medium"
+                >
+                  Year
+                </label>
                 <input
                   type="number"
                   id="edit-year"
@@ -354,12 +396,13 @@ export default function DashboardClient({
                   min="1900"
                   max="2100"
                   required
+                  className="w-full p-3 border-2 border-gray-300 rounded-lg text-base transition-all organic-shape-4 shadow-hand-sm focus:outline-none focus:border-accent-purple focus:shadow-hand-md focus:-translate-y-0.5"
                 />
               </div>
               <button
                 type="submit"
                 disabled={isEditing}
-                className={styles.submitBtn}
+                className="btn-primary w-full organic-shape-1 disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {isEditing ? "Saving..." : "Save Changes"}
               </button>
@@ -371,38 +414,40 @@ export default function DashboardClient({
       {/* Delete Confirmation Modal */}
       {showDeleteConfirm && selectedBoard && (
         <div
-          className={styles.modal}
+          className="modal-overlay"
           onClick={() => setShowDeleteConfirm(false)}
         >
           <div
-            className={styles.modalContent}
+            className="modal-base organic-shape-3 shadow-hand-lg max-w-xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className={styles.modalHeader}>
-              <h2>Delete Board?</h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl text-gray-800 font-semibold">
+                Delete Board?
+              </h2>
               <button
                 onClick={() => setShowDeleteConfirm(false)}
-                className={styles.closeBtn}
+                className="bg-transparent border-none text-2xl text-gray-400 cursor-pointer p-0 w-8 h-8 flex items-center justify-center rounded transition-colors hover:bg-gray-100"
               >
                 ×
               </button>
             </div>
-            <p className={styles.confirmText}>
+            <p className="text-gray-600 leading-relaxed mb-6">
               Are you sure you want to delete "{selectedBoard.title}"? This
               action cannot be undone and will permanently delete all goals on
               this board.
             </p>
-            <div className={styles.confirmActions}>
+            <div className="flex gap-3 justify-end">
               <button
                 onClick={() => setShowDeleteConfirm(false)}
-                className={styles.cancelBtn}
+                className="btn-outline organic-shape-4 disabled:opacity-60 disabled:cursor-not-allowed"
                 disabled={isDeleting}
               >
                 Cancel
               </button>
               <button
                 onClick={handleDeleteBoard}
-                className={styles.confirmDeleteBtn}
+                className="btn-danger organic-shape-1 disabled:opacity-60 disabled:cursor-not-allowed"
                 disabled={isDeleting}
               >
                 {isDeleting ? "Deleting..." : "Delete Board"}
