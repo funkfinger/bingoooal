@@ -158,7 +158,7 @@ a {
 
 @layer utilities {
   .page-container {
-    @apply min-h-screen bg-gray-50;
+    @apply min-h-screen bg-gradient-to-br from-accent-purple to-accent-indigo;
   }
 
   .content-container {
