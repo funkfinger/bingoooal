@@ -107,66 +107,160 @@ a {
    COMPONENT BASE CLASSES
    ============================================ */
 
-@layer components {
-  /* Card Components */
-  .card-base {
-    @apply bg-white rounded-xl shadow-large;
-  }
+/* Card Components */
+.card-base {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
 
-  .card-interactive {
-    @apply card-base transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
-  }
+.card-interactive {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s;
+}
 
-  .gradient-card {
-    @apply bg-gradient-to-br from-accent-purple to-accent-indigo text-white rounded-xl shadow-medium;
-  }
+.card-interactive:hover {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  transform: translateY(-0.25rem);
+}
 
-  /* Button Components */
-  .btn-primary {
-    @apply px-5 py-2.5 bg-accent-purple text-white font-medium rounded-lg shadow-medium cursor-pointer transition-all duration-200;
-    @apply hover:bg-primary-600 hover:-translate-y-0.5 hover:shadow-large;
-  }
+.gradient-card {
+  background: linear-gradient(to bottom right, #667eea, #764ba2);
+  color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
 
-  .btn-secondary {
-    @apply px-4 py-2 bg-secondary-500 text-white font-medium rounded-lg shadow-soft cursor-pointer transition-all duration-200;
-    @apply hover:bg-secondary-600 hover:-translate-y-0.5 hover:shadow-medium;
-  }
+/* Button Components */
+.btn-primary {
+  padding: 0.625rem 1.25rem;
+  background-color: #667eea;
+  color: white;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
 
-  .btn-danger {
-    @apply px-4 py-2 bg-danger text-white font-medium rounded-lg shadow-soft cursor-pointer transition-all duration-200;
-    @apply hover:bg-danger-dark hover:-translate-y-0.5 hover:shadow-medium;
-  }
+.btn-primary:hover {
+  background-color: #7c3aed;
+  transform: translateY(-0.125rem);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
 
-  .btn-outline {
-    @apply px-4 py-2 bg-white text-gray-700 font-medium rounded-lg border-2 border-gray-300 cursor-pointer transition-all duration-200;
-    @apply hover:border-accent-purple hover:text-accent-purple hover:-translate-y-0.5 hover:shadow-medium;
-  }
+.btn-secondary {
+  padding: 0.5rem 1rem;
+  background-color: #6366f1;
+  color: white;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
 
-  /* Modal Components */
-  .modal-base {
-    @apply bg-white rounded-xl shadow-xl p-8 max-w-lg w-11/12;
-  }
+.btn-secondary:hover {
+  background-color: #4f46e5;
+  transform: translateY(-0.125rem);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
 
-  .modal-overlay {
-    @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
-  }
+.btn-danger {
+  padding: 0.5rem 1rem;
+  background-color: #dc2626;
+  color: white;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+}
+
+.btn-danger:hover {
+  background-color: #b91c1c;
+  transform: translateY(-0.125rem);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-outline {
+  padding: 0.5rem 1rem;
+  background-color: white;
+  color: #374151;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  border: 2px solid #d1d5db;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-outline:hover {
+  border-color: #667eea;
+  color: #667eea;
+  transform: translateY(-0.125rem);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Modal Components */
+.modal-base {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  padding: 2rem;
+  max-width: 32rem;
+  width: 91.666667%;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
 }
 
 /* ============================================
    LAYOUT UTILITIES
    ============================================ */
 
-@layer utilities {
-  .page-container {
-    @apply min-h-screen bg-gradient-to-br from-accent-purple to-accent-indigo;
-  }
+.page-container {
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #667eea, #764ba2);
+}
 
-  .content-container {
-    @apply max-w-6xl mx-auto px-6 py-10;
-  }
+.content-container {
+  max-width: 72rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
 
+.mobile-padding {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 768px) {
   .mobile-padding {
-    @apply px-4 md:px-6 lg:px-8;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .mobile-padding {
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 }
 
