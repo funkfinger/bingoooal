@@ -9,6 +9,60 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **shadcn/ui Component Library Integration**:
+  - Initialized shadcn/ui with New York style and neutral color scheme
+  - Added 8 core UI components:
+    - Button - Accessible button component with multiple variants (default, secondary, destructive, outline, ghost, link)
+    - Card - Flexible card component with header, content, footer, title, and description subcomponents
+    - Dialog - Modal dialog component for forms and confirmations
+    - Input - Styled input field component
+    - Label - Form label component with proper accessibility
+    - Badge - Small status/label component with variants
+    - Separator - Visual divider component
+  - Created `lib/utils.ts` with `cn()` helper function for merging Tailwind classes
+  - Created `components.json` configuration file for shadcn CLI
+  - Added PostCSS configuration for Tailwind CSS processing
+
+### Changed
+
+- **Dashboard Component Migration to shadcn/ui**:
+
+  - Replaced all custom button styles with shadcn Button component
+  - Migrated welcome card and boards section to use shadcn Card component
+  - Converted all 3 modals to shadcn Dialog component:
+    - Create Board modal with form inputs and validation
+    - Edit Board modal with pre-populated form data
+    - Delete Confirmation modal with destructive action styling
+  - Updated board cards to use gradient styling with shadcn Card
+  - Improved accessibility with built-in ARIA attributes
+  - Enhanced visual consistency across the dashboard
+
+- **Friends Component Migration to shadcn/ui**:
+
+  - Replaced all button elements with shadcn Button component
+  - Maintained existing functionality while improving visual consistency
+  - Prepared component for further Card/Dialog migration
+
+- **Global CSS Cleanup**:
+
+  - Removed all custom component CSS classes:
+    - Deleted `.btn-primary`, `.btn-secondary`, `.btn-danger`, `.btn-outline` button classes
+    - Removed `.modal-base` and `.modal-overlay` modal classes
+    - Deleted `.card-base`, `.card-interactive`, `.gradient-card` card classes
+    - Removed `.page-container` layout class
+  - Reduced globals.css from 515 lines to 368 lines (28% reduction)
+  - Kept only essential layout utilities and theme variables
+  - Maintained hand-drawn aesthetic utilities for future use
+  - Preserved shadcn theme variables for light/dark mode support
+
+- **Design System Improvements**:
+
+  - Unified button styling across all components
+  - Consistent modal/dialog behavior and appearance
+  - Improved form input styling and validation states
+  - Better focus states and keyboard navigation
+  - Enhanced mobile responsiveness with shadcn's responsive utilities
+
 - **User Invitation System**:
 
   - Moved "Invite User" button from dashboard to Friends page for better context
