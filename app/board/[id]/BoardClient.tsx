@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import type { Board, Goal } from "@/lib/types";
 import {
   celebrateGoalCompletion,
@@ -181,8 +182,9 @@ export default function BoardClient({
             prev.map((g) => (g.id === data.goal.id ? data.goal : g))
           );
           setShowGoalModal(false);
+          toast.success("Goal updated successfully");
         } else {
-          alert(data.error || "Failed to update goal");
+          toast.error(data.error || "Failed to update goal");
         }
       } else {
         // Create new goal
@@ -202,13 +204,14 @@ export default function BoardClient({
         if (data.success && data.goal) {
           setGoals((prev) => [...prev, data.goal]);
           setShowGoalModal(false);
+          toast.success("Goal created successfully");
         } else {
-          alert(data.error || "Failed to create goal");
+          toast.error(data.error || "Failed to create goal");
         }
       }
     } catch (error) {
       console.error("Error saving goal:", error);
-      alert("An error occurred while saving the goal");
+      toast.error("An error occurred while saving the goal");
     } finally {
       setIsGoalSaving(false);
     }
@@ -232,12 +235,13 @@ export default function BoardClient({
         setGoals((prev) => prev.filter((g) => g.id !== selectedGoal.id));
         setShowGoalDeleteConfirm(false);
         setShowGoalModal(false);
+        toast.success("Goal deleted successfully");
       } else {
-        alert(data.error || "Failed to delete goal");
+        toast.error(data.error || "Failed to delete goal");
       }
     } catch (error) {
       console.error("Error deleting goal:", error);
-      alert("An error occurred while deleting the goal");
+      toast.error("An error occurred while deleting the goal");
     } finally {
       setIsGoalDeleting(false);
     }
@@ -281,11 +285,11 @@ export default function BoardClient({
           }
         }
       } else {
-        alert(data.error || "Failed to update goal");
+        toast.error(data.error || "Failed to update goal");
       }
     } catch (error) {
       console.error("Error toggling goal completion:", error);
-      alert("An error occurred while updating the goal");
+      toast.error("An error occurred while updating the goal");
     }
   };
 
@@ -308,12 +312,13 @@ export default function BoardClient({
         setCurrentBoard({ ...currentBoard, locked: true });
         setShowLockConfirm(false);
         router.refresh();
+        toast.success("Board locked successfully");
       } else {
-        alert(data.error || "Failed to lock board");
+        toast.error(data.error || "Failed to lock board");
       }
     } catch (error) {
       console.error("Error locking board:", error);
-      alert("An error occurred while locking the board");
+      toast.error("An error occurred while locking the board");
     } finally {
       setIsLocking(false);
     }
@@ -340,12 +345,13 @@ export default function BoardClient({
         setCurrentBoard(data.board);
         setShowEditModal(false);
         router.refresh();
+        toast.success("Board updated successfully");
       } else {
-        alert(data.error || "Failed to update board");
+        toast.error(data.error || "Failed to update board");
       }
     } catch (error) {
       console.error("Error updating board:", error);
-      alert("An error occurred while updating the board");
+      toast.error("An error occurred while updating the board");
     } finally {
       setIsEditing(false);
     }
@@ -364,15 +370,16 @@ export default function BoardClient({
       const data = await response.json();
 
       if (data.success) {
+        toast.success("Board deleted successfully");
         router.push("/dashboard");
         router.refresh();
       } else {
-        alert(data.error || "Failed to delete board");
+        toast.error(data.error || "Failed to delete board");
         setIsDeleting(false);
       }
     } catch (error) {
       console.error("Error deleting board:", error);
-      alert("An error occurred while deleting the board");
+      toast.error("An error occurred while deleting the board");
       setIsDeleting(false);
     }
   };
@@ -406,12 +413,15 @@ export default function BoardClient({
           setShareUrl(data.share_url);
         }
         router.refresh();
+        toast.success(
+          data.is_public ? "Board is now public" : "Board is now private"
+        );
       } else {
-        alert(data.error || "Failed to toggle share status");
+        toast.error(data.error || "Failed to toggle share status");
       }
     } catch (error) {
       console.error("Error toggling share:", error);
-      alert("An error occurred while toggling share status");
+      toast.error("An error occurred while toggling share status");
     } finally {
       setIsTogglingShare(false);
     }
@@ -430,7 +440,7 @@ export default function BoardClient({
 
   const copyShareLink = () => {
     navigator.clipboard.writeText(shareUrl);
-    alert("Share link copied to clipboard!");
+    toast.success("Share link copied to clipboard!");
   };
 
   return (

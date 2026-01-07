@@ -7,6 +7,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **shadcn/ui Toast Notifications**:
+  - Installed Sonner toast component via `npx shadcn@latest add sonner`
+  - Created `components/ui/sonner.tsx` with theme-aware toast configuration
+  - Added `<Toaster />` component to root layout (`app/layout.tsx`)
+  - Replaced all 27 browser `alert()` calls with modern toast notifications:
+    - **DashboardClient.tsx**: 6 alerts → toasts (3 error, 3 success)
+    - **BoardClient.tsx**: 15 alerts → toasts (8 error, 7 success)
+    - **FriendsClient.tsx**: 6 alerts → toasts (3 error, 3 success)
+  - Toast types implemented:
+    - `toast.error()` for failed operations and errors
+    - `toast.success()` for successful CRUD operations
+    - Contextual messages (e.g., "Board is now public" vs "Board is now private")
+  - Benefits:
+    - Non-blocking notifications (vs blocking alerts)
+    - Auto-dismiss functionality
+    - Stackable notifications
+    - Theme-aware styling
+    - Better accessibility
+    - Improved user experience
+
+### Changed
+
+- **Complete shadcn/ui Component Compliance**:
+  - Replaced native HTML checkbox with shadcn Checkbox component in `app/dashboard/DashboardClient.tsx`
+  - Updated event handler from `onChange` to `onCheckedChange`
+  - Changed checkbox value handling from `e.target.checked` to `checked === true`
+  - Application is now **100% shadcn compliant** for all UI components in use
+  - All form elements now use shadcn components (Button, Input, Textarea, Checkbox, Label)
+  - All modals use shadcn Dialog component
+  - All cards use shadcn Card component
+  - All badges use shadcn Badge component
+  - Consistent component patterns across entire codebase
+
 ### Removed
 
 - **Custom CSS Modules**:

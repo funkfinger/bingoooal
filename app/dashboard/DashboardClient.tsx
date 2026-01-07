@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import type { Board } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,6 +25,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface DashboardClientProps {
   user: {
@@ -73,11 +75,11 @@ export default function DashboardClient({
         router.push(`/board/${data.board.id}`);
         router.refresh();
       } else {
-        alert(data.error || "Failed to create board");
+        toast.error(data.error || "Failed to create board");
       }
     } catch (error) {
       console.error("Error creating board:", error);
-      alert("An error occurred while creating the board");
+      toast.error("An error occurred while creating the board");
     } finally {
       setIsCreating(false);
     }
@@ -105,12 +107,13 @@ export default function DashboardClient({
       if (data.success) {
         setShowEditModal(false);
         router.refresh();
+        toast.success("Board updated successfully");
       } else {
-        alert(data.error || "Failed to update board");
+        toast.error(data.error || "Failed to update board");
       }
     } catch (error) {
       console.error("Error updating board:", error);
-      alert("An error occurred while updating the board");
+      toast.error("An error occurred while updating the board");
     } finally {
       setIsEditing(false);
     }
@@ -133,12 +136,13 @@ export default function DashboardClient({
       if (data.success) {
         setShowDeleteConfirm(false);
         router.refresh();
+        toast.success("Board deleted successfully");
       } else {
-        alert(data.error || "Failed to delete board");
+        toast.error(data.error || "Failed to delete board");
       }
     } catch (error) {
       console.error("Error deleting board:", error);
-      alert("An error occurred while deleting the board");
+      toast.error("An error occurred while deleting the board");
     } finally {
       setIsDeleting(false);
     }
@@ -306,17 +310,15 @@ export default function DashboardClient({
                 />
               </div>
               <div className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
+                <Checkbox
                   id="free-space"
                   checked={formData.include_free_space}
-                  onChange={(e) =>
+                  onCheckedChange={(checked) =>
                     setFormData({
                       ...formData,
-                      include_free_space: e.target.checked,
+                      include_free_space: checked === true,
                     })
                   }
-                  className="cursor-pointer"
                 />
                 <Label htmlFor="free-space" className="cursor-pointer">
                   Include free space in center

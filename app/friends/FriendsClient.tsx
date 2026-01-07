@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -111,12 +112,13 @@ export default function FriendsClient({ user }: FriendsClientProps) {
       if (data.success) {
         // Remove from local state
         setMembers(members.filter((m) => m.id !== memberId));
+        toast.success("Member removed successfully");
       } else {
-        alert(data.error || "Failed to remove member");
+        toast.error(data.error || "Failed to remove member");
       }
     } catch (error) {
       console.error("Error removing member:", error);
-      alert("An error occurred while removing the member");
+      toast.error("An error occurred while removing the member");
     } finally {
       setRemovingMemberId(null);
     }
@@ -142,12 +144,13 @@ export default function FriendsClient({ user }: FriendsClientProps) {
       if (data.success) {
         // Remove from local state
         setMyGroups(myGroups.filter((g) => g.membership_id !== membershipId));
+        toast.success("Left group successfully");
       } else {
-        alert(data.error || "Failed to leave group");
+        toast.error(data.error || "Failed to leave group");
       }
     } catch (error) {
       console.error("Error leaving group:", error);
-      alert("An error occurred while leaving the group");
+      toast.error("An error occurred while leaving the group");
     } finally {
       setLeavingGroupId(null);
     }
@@ -167,12 +170,13 @@ export default function FriendsClient({ user }: FriendsClientProps) {
 
       if (data.success && data.invite_url) {
         setInviteUrl(data.invite_url);
+        toast.success("Invite link generated successfully");
       } else {
-        alert(data.error || "Failed to generate invite link");
+        toast.error(data.error || "Failed to generate invite link");
       }
     } catch (error) {
       console.error("Error generating invite:", error);
-      alert("An error occurred while generating the invite link");
+      toast.error("An error occurred while generating the invite link");
     } finally {
       setIsGeneratingInvite(false);
     }
@@ -180,7 +184,7 @@ export default function FriendsClient({ user }: FriendsClientProps) {
 
   const handleCopyInviteLink = () => {
     navigator.clipboard.writeText(inviteUrl);
-    alert("Invite link copied to clipboard!");
+    toast.success("Invite link copied to clipboard!");
   };
 
   const formatDate = (dateString: string) => {
