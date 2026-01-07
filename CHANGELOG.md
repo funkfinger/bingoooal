@@ -40,7 +40,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Updated all buttons to use shadcn Button component
     - Converted all text and background colors to theme-aware classes
   - Updated **login/page.tsx**:
-    - Replaced custom gradients with shadcn theme colors
+    - Replaced custom `<div>` card with shadcn Card component (CardHeader, CardTitle, CardDescription, CardContent)
+    - Converted custom `<button>` to shadcn Button component with outline variant
+    - Replaced custom gradients and manual styling with shadcn theme colors
+    - Improved semantic structure and accessibility
   - **Benefits**:
     - Consistent, themeable design system across entire application
     - Easy theme customization via CSS variables in `app/globals.css`
