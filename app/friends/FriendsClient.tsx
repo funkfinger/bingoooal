@@ -2,6 +2,23 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
 
 interface User {
   id: string;
@@ -202,13 +219,13 @@ export default function FriendsClient({ user }: FriendsClientProps) {
         <div className="mb-6">
           <button
             onClick={() => router.push("/dashboard")}
-            className="px-6 py-3 bg-white text-accent-purple border-2 border-accent-purple rounded-lg text-base font-medium cursor-pointer transition-all duration-200 organic-shape-1 shadow-hand-md rotate-slight-1 hover:bg-accent-purple hover:text-white hover:rotate-0 hover:-translate-y-0.5 hover:shadow-hand-lg"
+            className="px-6 py-3 bg-white text-accent-purple border-2 border-accent-purple rounded-lg text-base font-medium cursor-pointer transition-all duration-200 shadow-md hover:bg-accent-purple hover:text-white hover:-translate-y-0.5 hover:shadow-lg"
           >
             ← Back to Dashboard
           </button>
         </div>
 
-        <div className="bg-white rounded-xl p-8 shadow-hand-md organic-shape-2">
+        <div className="bg-white rounded-xl p-8 shadow-md">
           <h1 className="text-gray-800 mb-8 text-3xl font-bold">Friends</h1>
 
           {isLoading ? (
@@ -229,12 +246,12 @@ export default function FriendsClient({ user }: FriendsClientProps) {
                       People you've invited to join your friends group
                     </p>
                   </div>
-                  <button
+                  <Button
                     onClick={() => setShowInviteModal(true)}
-                    className="btn-primary organic-shape-3 whitespace-nowrap w-full md:w-auto"
+                    className="whitespace-nowrap w-full md:w-auto"
                   >
                     + Invite User
-                  </button>
+                  </Button>
                 </div>
 
                 {members.filter((m) => m.role !== "owner").length === 0 ? (
@@ -243,12 +260,9 @@ export default function FriendsClient({ user }: FriendsClientProps) {
                     <p className="mb-6">
                       No friends yet. Invite someone to get started!
                     </p>
-                    <button
-                      onClick={() => setShowInviteModal(true)}
-                      className="btn-primary organic-shape-4"
-                    >
+                    <Button onClick={() => setShowInviteModal(true)}>
                       Invite User
-                    </button>
+                    </Button>
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -257,7 +271,7 @@ export default function FriendsClient({ user }: FriendsClientProps) {
                       .map((member) => (
                         <div
                           key={member.id}
-                          className="flex justify-between items-center p-4 bg-gray-50 border-2 border-gray-200 rounded-lg transition-all duration-200 organic-shape-1 hover:bg-gray-100 hover:border-gray-300 hover:translate-x-1"
+                          className="flex justify-between items-center p-4 bg-gray-50 border-2 border-gray-200 rounded-lg transition-all duration-200 hover:bg-gray-100 hover:border-gray-300 hover:translate-x-1"
                         >
                           <div className="flex items-center gap-4 flex-1">
                             {member.user.avatar_url && (
@@ -286,7 +300,7 @@ export default function FriendsClient({ user }: FriendsClientProps) {
                               )
                             }
                             disabled={removingMemberId === member.id}
-                            className="px-4 py-2 bg-danger text-white font-medium rounded-lg shadow-soft cursor-pointer transition-all duration-200 hover:bg-danger-dark hover:-translate-y-0.5 hover:shadow-medium disabled:opacity-60 disabled:cursor-not-allowed organic-shape-2"
+                            className="px-4 py-2 bg-danger text-white font-medium rounded-lg shadow-soft cursor-pointer transition-all duration-200 hover:bg-danger-dark hover:-translate-y-0.5 hover:shadow-medium disabled:opacity-60 disabled:cursor-not-allowed"
                           >
                             {removingMemberId === member.id
                               ? "Removing..."
@@ -317,7 +331,7 @@ export default function FriendsClient({ user }: FriendsClientProps) {
                     {myGroups.map((group) => (
                       <div
                         key={group.membership_id}
-                        className="flex justify-between items-center p-4 bg-gray-50 border-2 border-gray-200 rounded-lg transition-all duration-200 organic-shape-2 hover:bg-gray-100 hover:border-gray-300 hover:translate-x-1"
+                        className="flex justify-between items-center p-4 bg-gray-50 border-2 border-gray-200 rounded-lg transition-all duration-200 hover:bg-gray-100 hover:border-gray-300 hover:translate-x-1"
                       >
                         <div className="flex items-center gap-4 flex-1">
                           {group.owner.avatar_url && (
@@ -344,7 +358,7 @@ export default function FriendsClient({ user }: FriendsClientProps) {
                             )
                           }
                           disabled={leavingGroupId === group.membership_id}
-                          className="px-4 py-2 bg-warning text-white font-medium rounded-lg shadow-soft cursor-pointer transition-all duration-200 hover:bg-warning-dark hover:-translate-y-0.5 hover:shadow-medium disabled:opacity-60 disabled:cursor-not-allowed organic-shape-3"
+                          className="px-4 py-2 bg-warning text-white font-medium rounded-lg shadow-soft cursor-pointer transition-all duration-200 hover:bg-warning-dark hover:-translate-y-0.5 hover:shadow-medium disabled:opacity-60 disabled:cursor-not-allowed"
                         >
                           {leavingGroupId === group.membership_id
                             ? "Leaving..."
@@ -370,7 +384,7 @@ export default function FriendsClient({ user }: FriendsClientProps) {
           }}
         >
           <div
-            className="modal-base organic-shape-3 shadow-hand-lg max-w-xl"
+            className="modal-base shadow-lg max-w-xl"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex justify-between items-center mb-6">
@@ -395,15 +409,15 @@ export default function FriendsClient({ user }: FriendsClientProps) {
                   invite to the platform. They'll be able to sign up and start
                   tracking their goals!
                 </p>
-                <button
+                <Button
                   onClick={handleGenerateInvite}
-                  className="btn-primary w-full organic-shape-1 disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="w-full"
                   disabled={isGeneratingInvite}
                 >
                   {isGeneratingInvite
                     ? "Generating..."
                     : "Generate Invite Link"}
-                </button>
+                </Button>
               </div>
             ) : (
               <div className="py-5">
@@ -415,11 +429,11 @@ export default function FriendsClient({ user }: FriendsClientProps) {
                     type="text"
                     value={inviteUrl}
                     readOnly
-                    className="flex-1 p-3 border-2 border-gray-200 rounded-lg text-sm font-mono bg-gray-50 text-gray-800 organic-shape-4"
+                    className="flex-1 p-3 border-2 border-gray-200 rounded-lg text-sm font-mono bg-gray-50 text-gray-800"
                   />
                   <button
                     onClick={handleCopyInviteLink}
-                    className="px-5 py-3 bg-accent-purple text-white font-medium rounded-lg shadow-soft cursor-pointer transition-all duration-200 hover:bg-primary-600 hover:-translate-y-0.5 hover:shadow-medium whitespace-nowrap organic-shape-2"
+                    className="px-5 py-3 bg-accent-purple text-white font-medium rounded-lg shadow-soft cursor-pointer transition-all duration-200 hover:bg-primary-600 hover:-translate-y-0.5 hover:shadow-medium whitespace-nowrap"
                   >
                     📋 Copy
                   </button>

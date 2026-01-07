@@ -4,6 +4,26 @@ import { useState } from "react";
 import { signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import type { Board } from "@/lib/types";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
 
 interface DashboardClientProps {
   user: {
@@ -141,9 +161,9 @@ export default function DashboardClient({
   };
 
   return (
-    <div className="page-container">
-      <header className="bg-white border-b-2 border-gray-200 px-6 py-4 flex justify-between items-center shadow-hand-sm">
-        <div className="flex items-center gap-3 text-2xl font-semibold text-gray-800">
+    <div className="min-h-screen bg-gradient-to-br from-purple-500 to-indigo-600">
+      <header className="bg-white border-b px-6 py-4 flex justify-between items-center">
+        <div className="flex items-center gap-3 text-2xl font-semibold">
           <span>🎯</span>
           <span>Bingoooal</span>
         </div>
@@ -155,129 +175,121 @@ export default function DashboardClient({
               className="w-10 h-10 rounded-full object-cover"
             />
           )}
-          <span className="font-medium text-gray-800 hidden md:inline">
+          <span className="font-medium hidden md:inline">
             {user.name || user.email}
           </span>
-          <button
-            onClick={() => router.push("/friends")}
-            className="px-4 py-2 bg-primary-500 text-white font-medium rounded-lg shadow-hand-sm cursor-pointer transition-all duration-200 hover:bg-primary-600 hover:-translate-y-0.5 hover:shadow-hand-md organic-shape-1"
-          >
+          <Button onClick={() => router.push("/friends")} variant="default">
             👥 Friends
-          </button>
-          <button
+          </Button>
+          <Button
             onClick={() => signOut({ callbackUrl: "/" })}
-            className="px-4 py-2 bg-accent-purple text-white font-medium rounded-lg shadow-hand-sm cursor-pointer transition-all duration-200 hover:bg-primary-600 hover:-translate-y-0.5 hover:shadow-hand-md organic-shape-2"
+            variant="secondary"
           >
             Logout
-          </button>
+          </Button>
         </div>
       </header>
 
-      <div className="content-container max-w-7xl">
-        <div className="bg-white rounded-xl p-8 mb-8 shadow-hand-md organic-shape-1 rotate-slight-1 transition-all duration-300 hover:rotate-0 hover:-translate-y-0.5 hover:shadow-hand-lg">
-          <h1 className="text-gray-800 mb-2 text-3xl font-bold">
-            Welcome back, {user.name?.split(" ")[0] || "there"}!
-          </h1>
-          <p className="text-gray-600 text-base">
-            Track your yearly goals with bingo boards
-          </p>
-        </div>
+      <div className="max-w-7xl mx-auto px-6 py-10">
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="text-3xl">
+              Welcome back, {user.name?.split(" ")[0] || "there"}!
+            </CardTitle>
+            <CardDescription>
+              Track your yearly goals with bingo boards
+            </CardDescription>
+          </CardHeader>
+        </Card>
 
-        <div className="bg-white rounded-xl p-8 shadow-hand-md organic-shape-2">
-          <div className="flex justify-between items-center mb-6 flex-col md:flex-row gap-3 md:gap-0">
-            <h2 className="text-gray-800 text-2xl font-semibold">
-              Your Boards
-            </h2>
-            <button
-              onClick={() => setShowModal(true)}
-              className="btn-primary organic-shape-3 w-full md:w-auto"
-            >
-              + Create New Board
-            </button>
-          </div>
-
-          {boards.length === 0 ? (
-            <div className="text-center py-16 px-5 text-gray-600">
-              <div className="text-6xl mb-4">📋</div>
-              <p className="mb-6">
-                No boards yet. Create your first bingo board to get started!
-              </p>
-              <button
+        <Card>
+          <CardHeader>
+            <div className="flex justify-between items-center flex-col md:flex-row gap-3 md:gap-0">
+              <CardTitle className="text-2xl">Your Boards</CardTitle>
+              <Button
                 onClick={() => setShowModal(true)}
-                className="btn-primary organic-shape-4"
+                className="w-full md:w-auto"
               >
-                Create Your First Board
-              </button>
+                + Create New Board
+              </Button>
             </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-              {boards.map((board) => (
-                <div
-                  key={board.id}
-                  className="gradient-card organic-shape-1 shadow-hand-md transition-all duration-200 hover:-translate-y-1 hover:shadow-hand-lg overflow-hidden"
-                >
-                  <div
-                    className="p-6 cursor-pointer"
+          </CardHeader>
+          <CardContent>
+            {boards.length === 0 ? (
+              <div className="text-center py-16 px-5 text-muted-foreground">
+                <div className="text-6xl mb-4">📋</div>
+                <p className="mb-6">
+                  No boards yet. Create your first bingo board to get started!
+                </p>
+                <Button onClick={() => setShowModal(true)}>
+                  Create Your First Board
+                </Button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {boards.map((board) => (
+                  <Card
+                    key={board.id}
+                    className="bg-gradient-to-br from-purple-500 to-indigo-600 text-white border-0 overflow-hidden hover:shadow-lg transition-all cursor-pointer"
                     onClick={() => router.push(`/board/${board.id}`)}
                   >
-                    <h3 className="text-xl mb-2 font-semibold">
-                      {board.title}
-                    </h3>
-                    <div className="text-sm opacity-90 mb-4">{board.year}</div>
-                    <div className="text-sm opacity-90">
-                      {board.locked ? "🔒 Locked" : "✏️ Editable"}
-                    </div>
-                  </div>
-                  <div className="flex gap-2 px-6 py-3 bg-black bg-opacity-10 border-t border-white border-opacity-10">
-                    <button
-                      onClick={(e) => openEditModal(board, e)}
-                      className="px-3 py-1.5 border-none rounded-md text-sm cursor-pointer transition-all duration-200 bg-white bg-opacity-20 text-white hover:bg-opacity-30"
-                      title="Edit board"
-                    >
-                      ✏️
-                    </button>
-                    <button
-                      onClick={(e) => openDeleteConfirm(board, e)}
-                      className="px-3 py-1.5 border-none rounded-md text-sm cursor-pointer transition-all duration-200 bg-white bg-opacity-20 text-white hover:bg-danger hover:bg-opacity-80"
-                      title="Delete board"
-                    >
-                      🗑️
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+                    <CardHeader>
+                      <CardTitle className="text-white">
+                        {board.title}
+                      </CardTitle>
+                      <CardDescription className="text-white/90">
+                        {board.year}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <Badge
+                        variant="secondary"
+                        className="bg-white/20 text-white border-0"
+                      >
+                        {board.locked ? "🔒 Locked" : "✏️ Editable"}
+                      </Badge>
+                    </CardContent>
+                    <CardFooter className="flex gap-2 bg-black/10 border-t border-white/10">
+                      <Button
+                        onClick={(e) => openEditModal(board, e)}
+                        variant="ghost"
+                        size="sm"
+                        className="text-white hover:bg-white/20"
+                        title="Edit board"
+                      >
+                        ✏️
+                      </Button>
+                      <Button
+                        onClick={(e) => openDeleteConfirm(board, e)}
+                        variant="ghost"
+                        size="sm"
+                        className="text-white hover:bg-red-500/80"
+                        title="Delete board"
+                      >
+                        🗑️
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
       </div>
 
-      {showModal && (
-        <div className="modal-overlay" onClick={() => setShowModal(false)}>
-          <div
-            className="modal-base organic-shape-3 shadow-hand-lg max-w-xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl text-gray-800 font-semibold">
-                Create New Board
-              </h2>
-              <button
-                onClick={() => setShowModal(false)}
-                className="bg-transparent border-none text-2xl text-gray-400 cursor-pointer p-0 w-8 h-8 flex items-center justify-center rounded transition-colors hover:bg-gray-100"
-              >
-                ×
-              </button>
-            </div>
-            <form onSubmit={handleCreateBoard}>
-              <div className="mb-5">
-                <label
-                  htmlFor="title"
-                  className="block mb-2 text-gray-800 font-medium"
-                >
-                  Board Title
-                </label>
-                <input
-                  type="text"
+      <Dialog open={showModal} onOpenChange={setShowModal}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Create New Board</DialogTitle>
+            <DialogDescription>
+              Create a new bingo board to track your goals for the year.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleCreateBoard}>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="title">Board Title</Label>
+                <Input
                   id="title"
                   value={formData.title}
                   onChange={(e) =>
@@ -285,19 +297,13 @@ export default function DashboardClient({
                   }
                   placeholder="e.g., 2025 Goals"
                   required
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg text-base transition-all organic-shape-4 shadow-hand-sm focus:outline-none focus:border-accent-purple focus:shadow-hand-md focus:-translate-y-0.5"
                 />
               </div>
-              <div className="mb-5">
-                <label
-                  htmlFor="year"
-                  className="block mb-2 text-gray-800 font-medium"
-                >
-                  Year
-                </label>
-                <input
-                  type="number"
+              <div className="grid gap-2">
+                <Label htmlFor="year">Year</Label>
+                <Input
                   id="year"
+                  type="number"
                   value={formData.year}
                   onChange={(e) =>
                     setFormData({ ...formData, year: parseInt(e.target.value) })
@@ -305,67 +311,49 @@ export default function DashboardClient({
                   min="2020"
                   max="2100"
                   required
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg text-base transition-all organic-shape-4 shadow-hand-sm focus:outline-none focus:border-accent-purple focus:shadow-hand-md focus:-translate-y-0.5"
                 />
               </div>
-              <div className="mb-6">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={formData.include_free_space}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        include_free_space: e.target.checked,
-                      })
-                    }
-                    className="w-auto cursor-pointer"
-                  />
-                  <span className="text-gray-700">
-                    Include free space in center
-                  </span>
-                </label>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  id="free-space"
+                  checked={formData.include_free_space}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      include_free_space: e.target.checked,
+                    })
+                  }
+                  className="cursor-pointer"
+                />
+                <Label htmlFor="free-space" className="cursor-pointer">
+                  Include free space in center
+                </Label>
               </div>
-              <button
-                type="submit"
-                disabled={isCreating}
-                className="btn-primary w-full organic-shape-1 disabled:opacity-60 disabled:cursor-not-allowed"
-              >
+            </div>
+            <DialogFooter>
+              <Button type="submit" disabled={isCreating} className="w-full">
                 {isCreating ? "Creating..." : "Create Board"}
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
 
       {/* Edit Board Modal */}
-      {showEditModal && selectedBoard && (
-        <div className="modal-overlay" onClick={() => setShowEditModal(false)}>
-          <div
-            className="modal-base organic-shape-2 shadow-hand-lg max-w-xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl text-gray-800 font-semibold">
-                Edit Board
-              </h2>
-              <button
-                onClick={() => setShowEditModal(false)}
-                className="bg-transparent border-none text-2xl text-gray-400 cursor-pointer p-0 w-8 h-8 flex items-center justify-center rounded transition-colors hover:bg-gray-100"
-              >
-                ×
-              </button>
-            </div>
-            <form onSubmit={handleEditBoard}>
-              <div className="mb-5">
-                <label
-                  htmlFor="edit-title"
-                  className="block mb-2 text-gray-800 font-medium"
-                >
-                  Board Title
-                </label>
-                <input
-                  type="text"
+      <Dialog open={showEditModal} onOpenChange={setShowEditModal}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Edit Board</DialogTitle>
+            <DialogDescription>
+              Update the title and year for your board.
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={handleEditBoard}>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="edit-title">Board Title</Label>
+                <Input
                   id="edit-title"
                   value={editFormData.title}
                   onChange={(e) =>
@@ -373,19 +361,13 @@ export default function DashboardClient({
                   }
                   placeholder="e.g., 2025 Goals"
                   required
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg text-base transition-all organic-shape-4 shadow-hand-sm focus:outline-none focus:border-accent-purple focus:shadow-hand-md focus:-translate-y-0.5"
                 />
               </div>
-              <div className="mb-5">
-                <label
-                  htmlFor="edit-year"
-                  className="block mb-2 text-gray-800 font-medium"
-                >
-                  Year
-                </label>
-                <input
-                  type="number"
+              <div className="grid gap-2">
+                <Label htmlFor="edit-year">Year</Label>
+                <Input
                   id="edit-year"
+                  type="number"
                   value={editFormData.year}
                   onChange={(e) =>
                     setEditFormData({
@@ -396,66 +378,47 @@ export default function DashboardClient({
                   min="1900"
                   max="2100"
                   required
-                  className="w-full p-3 border-2 border-gray-300 rounded-lg text-base transition-all organic-shape-4 shadow-hand-sm focus:outline-none focus:border-accent-purple focus:shadow-hand-md focus:-translate-y-0.5"
                 />
               </div>
-              <button
-                type="submit"
-                disabled={isEditing}
-                className="btn-primary w-full organic-shape-1 disabled:opacity-60 disabled:cursor-not-allowed"
-              >
+            </div>
+            <DialogFooter>
+              <Button type="submit" disabled={isEditing} className="w-full">
                 {isEditing ? "Saving..." : "Save Changes"}
-              </button>
-            </form>
-          </div>
-        </div>
-      )}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
 
       {/* Delete Confirmation Modal */}
-      {showDeleteConfirm && selectedBoard && (
-        <div
-          className="modal-overlay"
-          onClick={() => setShowDeleteConfirm(false)}
-        >
-          <div
-            className="modal-base organic-shape-3 shadow-hand-lg max-w-xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl text-gray-800 font-semibold">
-                Delete Board?
-              </h2>
-              <button
-                onClick={() => setShowDeleteConfirm(false)}
-                className="bg-transparent border-none text-2xl text-gray-400 cursor-pointer p-0 w-8 h-8 flex items-center justify-center rounded transition-colors hover:bg-gray-100"
-              >
-                ×
-              </button>
-            </div>
-            <p className="text-gray-600 leading-relaxed mb-6">
-              Are you sure you want to delete "{selectedBoard.title}"? This
+      <Dialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Delete Board?</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete "{selectedBoard?.title}"? This
               action cannot be undone and will permanently delete all goals on
               this board.
-            </p>
-            <div className="flex gap-3 justify-end">
-              <button
-                onClick={() => setShowDeleteConfirm(false)}
-                className="btn-outline organic-shape-4 disabled:opacity-60 disabled:cursor-not-allowed"
-                disabled={isDeleting}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleDeleteBoard}
-                className="btn-danger organic-shape-1 disabled:opacity-60 disabled:cursor-not-allowed"
-                disabled={isDeleting}
-              >
-                {isDeleting ? "Deleting..." : "Delete Board"}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex gap-3">
+            <Button
+              onClick={() => setShowDeleteConfirm(false)}
+              variant="outline"
+              disabled={isDeleting}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleDeleteBoard}
+              variant="destructive"
+              disabled={isDeleting}
+            >
+              {isDeleting ? "Deleting..." : "Delete Board"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
