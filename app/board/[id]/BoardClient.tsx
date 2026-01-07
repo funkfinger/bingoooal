@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { Board, Goal } from "@/lib/types";
-import gridStyles from "./board-grid.module.css";
 import {
   celebrateGoalCompletion,
   celebrateBingo,
@@ -435,10 +434,10 @@ export default function BoardClient({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-accent-purple to-accent-indigo">
-      <header className="bg-white bg-opacity-95 px-6 py-4 flex justify-between items-center shadow-soft">
+    <div className="min-h-screen bg-muted">
+      <header className="bg-card border-b border-border px-6 py-4 flex justify-between items-center shadow-sm">
         <div
-          className="flex items-center gap-3 text-2xl font-bold text-accent-purple cursor-pointer transition-opacity hover:opacity-80"
+          className="flex items-center gap-3 text-2xl font-bold text-foreground cursor-pointer transition-opacity hover:opacity-80"
           onClick={() => router.push("/dashboard")}
         >
           <span>🎯</span>
@@ -452,7 +451,7 @@ export default function BoardClient({
               className="w-9 h-9 rounded-full"
             />
           )}
-          <span className="text-sm text-gray-800 hidden md:inline">
+          <span className="text-sm text-foreground hidden md:inline">
             {isSharedView
               ? "Viewing Shared Board"
               : user?.name || user?.email || "User"}
@@ -470,7 +469,7 @@ export default function BoardClient({
         )}
 
         {isSharedView && (
-          <div className="bg-secondary-100 border-2 border-secondary-300 text-secondary-800 px-6 py-4 rounded-lg mb-6 text-center font-medium">
+          <div className="bg-secondary border border-border text-secondary-foreground px-6 py-4 rounded-lg mb-6 text-center font-medium">
             👁️ You are viewing a shared board in read-only mode
           </div>
         )}
@@ -478,10 +477,12 @@ export default function BoardClient({
         <Card className="mb-6">
           <CardContent className="p-6 flex justify-between items-center">
             <div>
-              <h1 className="text-gray-800 m-0 mb-2 text-3xl font-bold">
+              <h1 className="text-foreground m-0 mb-2 text-3xl font-bold">
                 {currentBoard.title}
               </h1>
-              <p className="text-gray-600 m-0 text-base">{currentBoard.year}</p>
+              <p className="text-muted-foreground m-0 text-base">
+                {currentBoard.year}
+              </p>
             </div>
             <div className="flex gap-3 items-center flex-wrap">
               {isSharedView ? (
@@ -491,13 +492,11 @@ export default function BoardClient({
               ) : (
                 <>
                   {currentBoard.locked ? (
-                    <Badge className="px-4 py-2 text-sm bg-success-light bg-opacity-10 text-success-dark border-2 border-success-light">
-                      🔒 Locked
-                    </Badge>
+                    <Badge className="px-4 py-2 text-sm">🔒 Locked</Badge>
                   ) : (
                     <Button
                       onClick={() => setShowLockConfirm(true)}
-                      className="bg-success-light hover:bg-success"
+                      variant="default"
                       disabled={goals.length < 25}
                       title={
                         goals.length < 25
@@ -527,33 +526,53 @@ export default function BoardClient({
         <Card className="mb-6">
           <CardContent className="p-6">
             <Progress value={progress} className="mb-3" />
-            <p className="text-gray-700 text-center font-medium">
+            <p className="text-foreground text-center font-medium">
               {completedCount} of {totalGoals} goals completed ({progress}%)
             </p>
           </CardContent>
         </Card>
 
-        <div className={gridStyles.bingoGrid}>
+        <div className="grid grid-cols-5 gap-3 mb-6 w-full max-w-full md:gap-2 sm:gap-1.5">
           {Array.from({ length: 25 }, (_, i) => {
             const goal = goalMap.get(i);
+            const isFreeSpace = goal?.is_free_space;
+            const isCompleted = goal?.completed;
+            const isFilled = !!goal;
+
             return (
               <div
                 key={i}
-                className={`${gridStyles.cell} ${
-                  goal ? gridStyles.filled : gridStyles.empty
-                } ${goal?.completed ? gridStyles.completed : ""} ${
-                  goal?.is_free_space ? gridStyles.freeSpace : ""
-                }`}
+                className={`
+                  aspect-square flex items-center justify-center cursor-pointer p-3 text-sm text-center relative
+                  rounded-md border-2 transition-all
+                  ${
+                    isFreeSpace
+                      ? "bg-accent text-accent-foreground border-accent"
+                      : isFilled
+                      ? isCompleted
+                        ? "bg-primary/10 border-primary text-foreground"
+                        : "bg-card border-border text-foreground hover:border-primary hover:shadow-md"
+                      : "bg-card border-dashed border-border text-muted-foreground hover:border-primary hover:bg-accent/50"
+                  }
+                  md:p-2 md:text-xs sm:p-1.5 sm:text-[11px]
+                `}
                 onClick={() => handleCellClick(i)}
               >
+                {isCompleted && (
+                  <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[120px] font-bold z-0 leading-none pointer-events-none text-primary/20 md:text-[100px] sm:text-[80px]">
+                    ✕
+                  </span>
+                )}
                 {goal ? (
-                  <div className={gridStyles.goalContent}>
-                    <span className={gridStyles.goalText}>
+                  <div className="flex flex-col items-center gap-2 w-full max-w-full overflow-hidden relative z-10">
+                    <span className="w-full max-w-full leading-tight line-clamp-3 break-words md:line-clamp-2">
                       {goal.is_free_space ? "Free Space" : goal.text}
                     </span>
                   </div>
                 ) : (
-                  <span className={gridStyles.addIcon}>+</span>
+                  <span className="text-[32px] md:text-[28px] sm:text-[24px]">
+                    +
+                  </span>
                 )}
               </div>
             );
@@ -592,7 +611,7 @@ export default function BoardClient({
                 required
                 className="resize-none mt-2"
               />
-              <div className="text-sm text-gray-500 mt-1 text-right">
+              <div className="text-sm text-muted-foreground mt-1 text-right">
                 {goalFormData.text.length}/200 characters
               </div>
             </div>
@@ -600,7 +619,8 @@ export default function BoardClient({
               <Button
                 type="button"
                 onClick={getRandomGoal}
-                className="w-full mb-4 bg-warning hover:bg-warning-dark"
+                className="w-full mb-4"
+                variant="secondary"
               >
                 ✨ Inspire Me
               </Button>
@@ -779,7 +799,7 @@ export default function BoardClient({
                     type="text"
                     value={shareUrl}
                     readOnly
-                    className="flex-1 font-mono bg-gray-50"
+                    className="flex-1 font-mono"
                   />
                   <Button onClick={copyShareLink} className="whitespace-nowrap">
                     📋 Copy
@@ -835,7 +855,7 @@ export default function BoardClient({
               <div className="py-5 space-y-4">
                 <div>
                   <Label className="mb-2">Goal:</Label>
-                  <div className="text-base text-gray-800">
+                  <div className="text-base text-foreground">
                     {selectedGoal.is_free_space
                       ? "Free Space"
                       : selectedGoal.text}
@@ -843,11 +863,9 @@ export default function BoardClient({
                 </div>
                 <div>
                   <Label className="mb-2">Status:</Label>
-                  <div className="text-base text-gray-800">
+                  <div className="text-base text-foreground">
                     {selectedGoal.completed ? (
-                      <Badge className="bg-success text-white">
-                        ✓ Completed
-                      </Badge>
+                      <Badge variant="default">✓ Completed</Badge>
                     ) : (
                       <Badge variant="secondary">Not Completed</Badge>
                     )}
@@ -855,7 +873,7 @@ export default function BoardClient({
                 </div>
                 {selectedGoal.is_free_space && (
                   <div>
-                    <p className="text-sm text-gray-600 italic bg-gray-50 p-3 rounded-lg">
+                    <p className="text-sm text-muted-foreground italic bg-muted p-3 rounded-lg">
                       🎁 This is a free space - it's automatically completed and
                       cannot be changed.
                     </p>
@@ -864,24 +882,20 @@ export default function BoardClient({
                 {selectedGoal.completed_at && (
                   <div>
                     <Label className="mb-2">Completed on:</Label>
-                    <p className="text-base text-gray-800">
+                    <p className="text-base text-foreground">
                       {new Date(selectedGoal.completed_at).toLocaleDateString()}
                     </p>
                   </div>
                 )}
               </div>
-              <DialogFooter className="pt-4 border-t-2 border-gray-100">
+              <DialogFooter className="pt-4 border-t border-border">
                 {!selectedGoal.is_free_space && !isSharedView && (
                   <Button
                     onClick={async () => {
                       await handleToggleCompletion(selectedGoal);
                       setShowDetailsModal(false);
                     }}
-                    className={
-                      selectedGoal.completed
-                        ? "bg-warning hover:bg-warning-dark"
-                        : "bg-success hover:bg-success-dark"
-                    }
+                    variant={selectedGoal.completed ? "secondary" : "default"}
                   >
                     {selectedGoal.completed
                       ? "Mark as Incomplete"

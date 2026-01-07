@@ -22,18 +22,18 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-5 bg-gradient-to-br from-accent-purple to-accent-indigo">
-      <div className="bg-white rounded-2xl shadow-xl p-12 max-w-md w-full text-center organic-shape-1">
+    <div className="min-h-screen flex items-center justify-center p-5 bg-muted">
+      <div className="bg-card rounded-2xl shadow-xl p-12 max-w-md w-full text-center border border-border">
         <div className="text-5xl mb-4">🎯</div>
-        <h1 className="text-gray-800 mb-3 text-3xl font-semibold">
+        <h1 className="text-foreground mb-3 text-3xl font-semibold">
           Welcome to Bingoooal
         </h1>
-        <p className="text-gray-600 mb-8 text-base">
+        <p className="text-muted-foreground mb-8 text-base">
           Track your yearly goals in bingo format
         </p>
 
         {error && (
-          <div className="bg-red-50 text-red-700 p-3 rounded-lg mb-5 text-sm">
+          <div className="bg-destructive/10 text-destructive p-3 rounded-lg mb-5 text-sm border border-destructive/20">
             {error === "OAuthSignin" && "Error signing in with Google"}
             {error === "OAuthCallback" && "Error during authentication"}
             {error === "OAuthCreateAccount" && "Could not create account"}
@@ -62,7 +62,7 @@ function LoginForm() {
         <button
           onClick={handleGoogleSignIn}
           disabled={isLoading}
-          className="flex items-center justify-center gap-3 w-full px-6 py-3.5 bg-white border-2 border-gray-300 rounded-lg text-base font-medium text-gray-800 cursor-pointer transition-all duration-200 organic-shape-2 hover:bg-gray-50 hover:border-accent-purple hover:-translate-y-0.5 hover:shadow-medium active:translate-y-0 disabled:opacity-60 disabled:cursor-not-allowed"
+          className="flex items-center justify-center gap-3 w-full px-6 py-3.5 bg-card border-2 border-border rounded-lg text-base font-medium text-foreground cursor-pointer transition-all duration-200 hover:bg-accent hover:border-primary hover:-translate-y-0.5 hover:shadow-md active:translate-y-0 disabled:opacity-60 disabled:cursor-not-allowed"
         >
           <svg className="w-5 h-5" viewBox="0 0 24 24">
             <path

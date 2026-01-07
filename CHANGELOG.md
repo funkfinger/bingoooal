@@ -9,6 +9,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+- **Custom CSS Modules**:
+  - Removed `app/board/[id]/board.module.css` (1342 lines of custom CSS)
+  - Removed `app/board/[id]/board-grid.module.css` (124 lines of custom CSS)
+  - Eliminated all custom color definitions, gradients, and shadow utilities
+  - Removed non-existent Tailwind classes (`accent-purple`, `accent-indigo`, `shadow-soft`, `shadow-medium`, etc.)
+  - Removed custom semantic color classes (`bg-danger`, `bg-warning`, `bg-success`)
+
+### Changed
+
+- **Complete Migration to shadcn/ui Theming**:
+
+  - Migrated all components to use shadcn/ui theme tokens exclusively
+  - Replaced all custom colors with semantic theme colors:
+    - `bg-background`, `bg-card`, `bg-muted`, `bg-accent`
+    - `text-foreground`, `text-muted-foreground`, `text-accent-foreground`
+    - `border-border`, `border-primary`
+    - `bg-destructive`, `text-destructive-foreground`
+  - Updated **DashboardClient.tsx**:
+    - Replaced custom purple/indigo gradients with `bg-muted` and `bg-card`
+    - Converted all text colors to `text-foreground` and `text-muted-foreground`
+  - Updated **BoardClient.tsx**:
+    - Migrated all CSS module classes to Tailwind utilities with shadcn theme
+    - Replaced custom button colors with shadcn Button variants
+    - Updated all modal dialogs to use shadcn theme colors
+    - Converted custom badges to shadcn Badge component with proper variants
+  - Updated **FriendsClient.tsx**:
+    - Replaced all custom colors with shadcn theme tokens
+    - Migrated Invite User modal to shadcn Dialog component
+    - Updated all buttons to use shadcn Button component
+    - Converted all text and background colors to theme-aware classes
+  - Updated **login/page.tsx**:
+    - Replaced custom gradients with shadcn theme colors
+  - **Benefits**:
+    - Consistent, themeable design system across entire application
+    - Easy theme customization via CSS variables in `app/globals.css`
+    - Improved maintainability with standardized component styling
+    - Better dark mode support (when implemented)
+    - Reduced CSS bundle size by eliminating custom styles
+
 - **Hand-Drawn Aesthetic Utilities**:
 
   - Removed all hand-drawn aesthetic CSS classes from `globals.css`:
@@ -25,6 +64,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Maintained all functionality while adopting a cleaner, more standard design system
 
 - **Custom Theme and Styling**:
+
   - Removed all custom color palettes from `globals.css`:
     - Primary brand colors (purple/indigo gradient theme)
     - Secondary colors
@@ -38,9 +78,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Removed dark mode media query overrides for RGB color variables
   - Removed all body and global element styling except essential resets
   - Set `--radius: 0` to remove all rounded corners throughout the application
-  - Converted all color values to grayscale HSL format for minimal, plain aesthetic
+  - Replaced custom grayscale colors with shadcn/ui default slate theme for proper contrast
   - Reduced `globals.css` from 229 lines to 85 lines (63% reduction)
   - Maintained only essential shadcn/ui CSS variables and Tailwind imports
+
+- **Landing Page Styling**:
+  - Removed gradient background (purple-600 to indigo-700)
+  - Removed custom button styling with purple colors
+  - Converted "Get Started" link to use shadcn Button component
+  - Applied bg-background and text-foreground for plain aesthetic
+  - Verified proper button contrast (dark background with light text) using Playwright
 
 ### Added
 

@@ -192,10 +192,10 @@ export default function FriendsClient({ user }: FriendsClientProps) {
   };
 
   return (
-    <div className="page-container">
-      <header className="bg-white border-b-2 border-gray-200 px-6 py-4 flex justify-between items-center shadow-hand-sm">
+    <div className="min-h-screen bg-muted">
+      <header className="bg-card border-b border-border px-6 py-4 flex justify-between items-center shadow-sm">
         <div
-          className="flex items-center gap-3 text-2xl font-semibold text-gray-800 cursor-pointer transition-transform hover:-translate-y-0.5"
+          className="flex items-center gap-3 text-2xl font-semibold text-foreground cursor-pointer transition-transform hover:-translate-y-0.5"
           onClick={() => router.push("/dashboard")}
         >
           <span>🎯</span>
@@ -209,7 +209,7 @@ export default function FriendsClient({ user }: FriendsClientProps) {
               className="w-10 h-10 rounded-full object-cover"
             />
           )}
-          <span className="font-medium text-gray-800 hidden md:inline">
+          <span className="font-medium text-foreground hidden md:inline">
             {user.name || user.email}
           </span>
         </div>
@@ -217,235 +217,222 @@ export default function FriendsClient({ user }: FriendsClientProps) {
 
       <div className="max-w-5xl mx-auto px-6 py-10">
         <div className="mb-6">
-          <button
-            onClick={() => router.push("/dashboard")}
-            className="px-6 py-3 bg-white text-accent-purple border-2 border-accent-purple rounded-lg text-base font-medium cursor-pointer transition-all duration-200 shadow-md hover:bg-accent-purple hover:text-white hover:-translate-y-0.5 hover:shadow-lg"
-          >
+          <Button onClick={() => router.push("/dashboard")} variant="outline">
             ← Back to Dashboard
-          </button>
+          </Button>
         </div>
 
-        <div className="bg-white rounded-xl p-8 shadow-md">
-          <h1 className="text-gray-800 mb-8 text-3xl font-bold">Friends</h1>
-
-          {isLoading ? (
-            <div className="text-center py-12 text-gray-600 text-lg">
-              Loading...
-            </div>
-          ) : (
-            <>
-              {/* My Friends Group */}
-              <section className="mb-10">
-                <div className="flex justify-between items-start mb-6 flex-col md:flex-row gap-4">
-                  <div>
-                    <h2 className="text-2xl font-semibold text-gray-800 mb-2">
-                      <span>👥</span> My Friends (
-                      {members.filter((m) => m.role !== "owner").length})
-                    </h2>
-                    <p className="text-gray-600">
-                      People you've invited to join your friends group
-                    </p>
-                  </div>
-                  <Button
-                    onClick={() => setShowInviteModal(true)}
-                    className="whitespace-nowrap w-full md:w-auto"
-                  >
-                    + Invite User
-                  </Button>
-                </div>
-
-                {members.filter((m) => m.role !== "owner").length === 0 ? (
-                  <div className="text-center py-12 text-gray-600">
-                    <div className="text-6xl mb-4">👋</div>
-                    <p className="mb-6">
-                      No friends yet. Invite someone to get started!
-                    </p>
-                    <Button onClick={() => setShowInviteModal(true)}>
-                      Invite User
+        <Card>
+          <CardHeader>
+            <CardTitle>Friends</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {isLoading ? (
+              <div className="text-center py-12 text-muted-foreground text-lg">
+                Loading...
+              </div>
+            ) : (
+              <>
+                {/* My Friends Group */}
+                <section className="mb-10">
+                  <div className="flex justify-between items-start mb-6 flex-col md:flex-row gap-4">
+                    <div>
+                      <h2 className="text-2xl font-semibold text-foreground mb-2">
+                        <span>👥</span> My Friends (
+                        {members.filter((m) => m.role !== "owner").length})
+                      </h2>
+                      <p className="text-muted-foreground">
+                        People you've invited to join your friends group
+                      </p>
+                    </div>
+                    <Button
+                      onClick={() => setShowInviteModal(true)}
+                      className="whitespace-nowrap w-full md:w-auto"
+                    >
+                      + Invite User
                     </Button>
                   </div>
-                ) : (
-                  <div className="space-y-4">
-                    {members
-                      .filter((member) => member.role !== "owner")
-                      .map((member) => (
+
+                  {members.filter((m) => m.role !== "owner").length === 0 ? (
+                    <div className="text-center py-12 text-muted-foreground">
+                      <div className="text-6xl mb-4">👋</div>
+                      <p className="mb-6">
+                        No friends yet. Invite someone to get started!
+                      </p>
+                      <Button onClick={() => setShowInviteModal(true)}>
+                        Invite User
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {members
+                        .filter((member) => member.role !== "owner")
+                        .map((member) => (
+                          <div
+                            key={member.id}
+                            className="flex justify-between items-center p-4 bg-muted border border-border rounded-lg transition-all duration-200 hover:bg-accent hover:border-primary"
+                          >
+                            <div className="flex items-center gap-4 flex-1">
+                              {member.user.avatar_url && (
+                                <img
+                                  src={member.user.avatar_url}
+                                  alt={member.user.name || ""}
+                                  className="w-12 h-12 rounded-full object-cover border-2 border-border"
+                                />
+                              )}
+                              <div className="flex-1">
+                                <div className="text-base font-semibold text-foreground mb-1">
+                                  {member.user.name || member.user.email}
+                                </div>
+                                <div className="text-sm text-muted-foreground">
+                                  <span>
+                                    Joined {formatDate(member.joined_at)}
+                                  </span>
+                                </div>
+                              </div>
+                            </div>
+                            <Button
+                              onClick={() =>
+                                handleRemoveMember(
+                                  member.id,
+                                  member.user.name || member.user.email
+                                )
+                              }
+                              disabled={removingMemberId === member.id}
+                              variant="destructive"
+                            >
+                              {removingMemberId === member.id
+                                ? "Removing..."
+                                : "Remove"}
+                            </Button>
+                          </div>
+                        ))}
+                    </div>
+                  )}
+                </section>
+
+                {/* Groups I'm In */}
+                <section className="mb-10">
+                  <h2 className="text-2xl font-semibold text-foreground mb-2">
+                    <span>🤝</span> Groups I'm In ({myGroups.length})
+                  </h2>
+                  <p className="text-muted-foreground mb-6">
+                    Friends groups you've joined
+                  </p>
+
+                  {myGroups.length === 0 ? (
+                    <div className="text-center py-12 text-muted-foreground">
+                      <div className="text-6xl mb-4">🔗</div>
+                      <p>You haven't joined any friends groups yet.</p>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {myGroups.map((group) => (
                         <div
-                          key={member.id}
-                          className="flex justify-between items-center p-4 bg-gray-50 border-2 border-gray-200 rounded-lg transition-all duration-200 hover:bg-gray-100 hover:border-gray-300 hover:translate-x-1"
+                          key={group.membership_id}
+                          className="flex justify-between items-center p-4 bg-muted border border-border rounded-lg transition-all duration-200 hover:bg-accent hover:border-primary"
                         >
                           <div className="flex items-center gap-4 flex-1">
-                            {member.user.avatar_url && (
+                            {group.owner.avatar_url && (
                               <img
-                                src={member.user.avatar_url}
-                                alt={member.user.name || ""}
-                                className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
+                                src={group.owner.avatar_url}
+                                alt={group.owner.name || ""}
+                                className="w-12 h-12 rounded-full object-cover border-2 border-border"
                               />
                             )}
                             <div className="flex-1">
-                              <div className="text-base font-semibold text-gray-800 mb-1">
-                                {member.user.name || member.user.email}
+                              <div className="text-base font-semibold text-foreground mb-1">
+                                {group.owner.name || group.owner.email}'s
+                                Friends
                               </div>
-                              <div className="text-sm text-gray-600">
+                              <div className="text-sm text-muted-foreground">
                                 <span>
-                                  Joined {formatDate(member.joined_at)}
+                                  Joined {formatDate(group.joined_at)}
                                 </span>
                               </div>
                             </div>
                           </div>
-                          <button
+                          <Button
                             onClick={() =>
-                              handleRemoveMember(
-                                member.id,
-                                member.user.name || member.user.email
+                              handleLeaveGroup(
+                                group.membership_id,
+                                group.owner.name || group.owner.email
                               )
                             }
-                            disabled={removingMemberId === member.id}
-                            className="px-4 py-2 bg-danger text-white font-medium rounded-lg shadow-soft cursor-pointer transition-all duration-200 hover:bg-danger-dark hover:-translate-y-0.5 hover:shadow-medium disabled:opacity-60 disabled:cursor-not-allowed"
+                            disabled={leavingGroupId === group.membership_id}
+                            variant="secondary"
                           >
-                            {removingMemberId === member.id
-                              ? "Removing..."
-                              : "Remove"}
-                          </button>
+                            {leavingGroupId === group.membership_id
+                              ? "Leaving..."
+                              : "Leave"}
+                          </Button>
                         </div>
                       ))}
-                  </div>
-                )}
-              </section>
-
-              {/* Groups I'm In */}
-              <section className="mb-10">
-                <h2 className="text-2xl font-semibold text-gray-800 mb-2">
-                  <span>🤝</span> Groups I'm In ({myGroups.length})
-                </h2>
-                <p className="text-gray-600 mb-6">
-                  Friends groups you've joined
-                </p>
-
-                {myGroups.length === 0 ? (
-                  <div className="text-center py-12 text-gray-600">
-                    <div className="text-6xl mb-4">🔗</div>
-                    <p>You haven't joined any friends groups yet.</p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {myGroups.map((group) => (
-                      <div
-                        key={group.membership_id}
-                        className="flex justify-between items-center p-4 bg-gray-50 border-2 border-gray-200 rounded-lg transition-all duration-200 hover:bg-gray-100 hover:border-gray-300 hover:translate-x-1"
-                      >
-                        <div className="flex items-center gap-4 flex-1">
-                          {group.owner.avatar_url && (
-                            <img
-                              src={group.owner.avatar_url}
-                              alt={group.owner.name || ""}
-                              className="w-12 h-12 rounded-full object-cover border-2 border-gray-200"
-                            />
-                          )}
-                          <div className="flex-1">
-                            <div className="text-base font-semibold text-gray-800 mb-1">
-                              {group.owner.name || group.owner.email}'s Friends
-                            </div>
-                            <div className="text-sm text-gray-600">
-                              <span>Joined {formatDate(group.joined_at)}</span>
-                            </div>
-                          </div>
-                        </div>
-                        <button
-                          onClick={() =>
-                            handleLeaveGroup(
-                              group.membership_id,
-                              group.owner.name || group.owner.email
-                            )
-                          }
-                          disabled={leavingGroupId === group.membership_id}
-                          className="px-4 py-2 bg-warning text-white font-medium rounded-lg shadow-soft cursor-pointer transition-all duration-200 hover:bg-warning-dark hover:-translate-y-0.5 hover:shadow-medium disabled:opacity-60 disabled:cursor-not-allowed"
-                        >
-                          {leavingGroupId === group.membership_id
-                            ? "Leaving..."
-                            : "Leave"}
-                        </button>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </section>
-            </>
-          )}
-        </div>
+                    </div>
+                  )}
+                </section>
+              </>
+            )}
+          </CardContent>
+        </Card>
       </div>
 
       {/* Invite User Modal */}
-      {showInviteModal && (
-        <div
-          className="modal-overlay"
-          onClick={() => {
-            setShowInviteModal(false);
-            setInviteUrl("");
-          }}
-        >
-          <div
-            className="modal-base shadow-lg max-w-xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl text-gray-800 font-semibold">
-                Invite User to Bingoooal
-              </h2>
-              <button
-                onClick={() => {
-                  setShowInviteModal(false);
-                  setInviteUrl("");
-                }}
-                className="bg-transparent border-none text-2xl text-gray-400 cursor-pointer p-0 w-8 h-8 flex items-center justify-center rounded transition-colors hover:bg-gray-100"
-              >
-                ×
-              </button>
-            </div>
+      <Dialog
+        open={showInviteModal}
+        onOpenChange={(open) => {
+          setShowInviteModal(open);
+          if (!open) setInviteUrl("");
+        }}
+      >
+        <DialogContent className="sm:max-w-xl">
+          <DialogHeader>
+            <DialogTitle>Invite User to Bingoooal</DialogTitle>
+            <DialogDescription>
+              Generate an invite link to share with someone you'd like to invite
+              to the platform.
+            </DialogDescription>
+          </DialogHeader>
 
-            {!inviteUrl ? (
-              <div className="py-5">
-                <p className="text-gray-600 text-base leading-relaxed mb-6">
-                  Generate an invite link to share with someone you'd like to
-                  invite to the platform. They'll be able to sign up and start
-                  tracking their goals!
-                </p>
+          {!inviteUrl ? (
+            <div className="py-5">
+              <p className="text-muted-foreground text-base leading-relaxed mb-6">
+                They'll be able to sign up and start tracking their goals!
+              </p>
+              <Button
+                onClick={handleGenerateInvite}
+                className="w-full"
+                disabled={isGeneratingInvite}
+              >
+                {isGeneratingInvite ? "Generating..." : "Generate Invite Link"}
+              </Button>
+            </div>
+          ) : (
+            <div className="py-5">
+              <p className="text-muted-foreground text-base leading-relaxed mb-4">
+                Share this link with the person you want to invite:
+              </p>
+              <div className="flex gap-3 mb-4">
+                <Input
+                  type="text"
+                  value={inviteUrl}
+                  readOnly
+                  className="flex-1 font-mono"
+                />
                 <Button
-                  onClick={handleGenerateInvite}
-                  className="w-full"
-                  disabled={isGeneratingInvite}
+                  onClick={handleCopyInviteLink}
+                  className="whitespace-nowrap"
                 >
-                  {isGeneratingInvite
-                    ? "Generating..."
-                    : "Generate Invite Link"}
+                  📋 Copy
                 </Button>
               </div>
-            ) : (
-              <div className="py-5">
-                <p className="text-gray-600 text-base leading-relaxed mb-4">
-                  Share this link with the person you want to invite:
-                </p>
-                <div className="flex gap-3 mb-4">
-                  <input
-                    type="text"
-                    value={inviteUrl}
-                    readOnly
-                    className="flex-1 p-3 border-2 border-gray-200 rounded-lg text-sm font-mono bg-gray-50 text-gray-800"
-                  />
-                  <button
-                    onClick={handleCopyInviteLink}
-                    className="px-5 py-3 bg-accent-purple text-white font-medium rounded-lg shadow-soft cursor-pointer transition-all duration-200 hover:bg-primary-600 hover:-translate-y-0.5 hover:shadow-medium whitespace-nowrap"
-                  >
-                    📋 Copy
-                  </button>
-                </div>
-                <p className="text-gray-500 text-sm italic text-center">
-                  This link will expire in 30 days and can only be used once.
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-      )}
+              <p className="text-muted-foreground text-sm italic text-center">
+                This link will expire in 30 days and can only be used once.
+              </p>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

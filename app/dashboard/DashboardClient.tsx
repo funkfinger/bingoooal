@@ -161,9 +161,9 @@ export default function DashboardClient({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-500 to-indigo-600">
-      <header className="bg-white border-b px-6 py-4 flex justify-between items-center">
-        <div className="flex items-center gap-3 text-2xl font-semibold">
+    <div className="min-h-screen bg-muted">
+      <header className="bg-card border-b border-border px-6 py-4 flex justify-between items-center">
+        <div className="flex items-center gap-3 text-2xl font-semibold text-foreground">
           <span>🎯</span>
           <span>Bingoooal</span>
         </div>
@@ -230,31 +230,23 @@ export default function DashboardClient({
                 {boards.map((board) => (
                   <Card
                     key={board.id}
-                    className="bg-gradient-to-br from-purple-500 to-indigo-600 text-white border-0 overflow-hidden hover:shadow-lg transition-all cursor-pointer"
+                    className="border-border overflow-hidden hover:shadow-lg transition-all cursor-pointer"
                     onClick={() => router.push(`/board/${board.id}`)}
                   >
                     <CardHeader>
-                      <CardTitle className="text-white">
-                        {board.title}
-                      </CardTitle>
-                      <CardDescription className="text-white/90">
-                        {board.year}
-                      </CardDescription>
+                      <CardTitle>{board.title}</CardTitle>
+                      <CardDescription>{board.year}</CardDescription>
                     </CardHeader>
                     <CardContent>
-                      <Badge
-                        variant="secondary"
-                        className="bg-white/20 text-white border-0"
-                      >
+                      <Badge variant="secondary">
                         {board.locked ? "🔒 Locked" : "✏️ Editable"}
                       </Badge>
                     </CardContent>
-                    <CardFooter className="flex gap-2 bg-black/10 border-t border-white/10">
+                    <CardFooter className="flex gap-2 bg-muted border-t border-border">
                       <Button
                         onClick={(e) => openEditModal(board, e)}
                         variant="ghost"
                         size="sm"
-                        className="text-white hover:bg-white/20"
                         title="Edit board"
                       >
                         ✏️
@@ -263,7 +255,7 @@ export default function DashboardClient({
                         onClick={(e) => openDeleteConfirm(board, e)}
                         variant="ghost"
                         size="sm"
-                        className="text-white hover:bg-red-500/80"
+                        className="hover:bg-destructive hover:text-destructive-foreground"
                         title="Delete board"
                       >
                         🗑️
